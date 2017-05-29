@@ -5,6 +5,7 @@ supports.
 
 ## Supported Op Codes
 [Wikipedia](https://en.wikipedia.org/wiki/CHIP-8#Virtual_machine_description)
+
 | Name | Opcode | Description |
 | --------------------------- |
 |`SYS` | `0NNN` | System call. Not used |
@@ -55,11 +56,11 @@ added for convenience by the assembler. Note the lack of an opcode.
 
 | Name | Description |
 | ---- | ----------- |
-| LB   | Loads a hexadecimal byte value into memory. Note that this instruction
-must follow a valid label and be at the _END_ of your program |
+| LB   | Loads a hexadecimal byte value into memory. |
 
 ## Operands
 Operands may be one of three different types:
+
 | Type | Example | Description |
 | ---- | ------- | ----------- |
 | Register | `r4`| Registers are in the range 0 - F and start with `r` or `R`. |
