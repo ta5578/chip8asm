@@ -7,7 +7,7 @@ supports.
 [Wikipedia](https://en.wikipedia.org/wiki/CHIP-8#Virtual_machine_description)
 
 | Name | Opcode | Description |
-| --------------------------- |
+| -----|--------|------------ |
 |`SYS` | `0NNN` | System call. Not used |
 |`CLR` | `00E0` | Clears the screen |
 |`RET` | `00EE` | Returns from a subroutine |
