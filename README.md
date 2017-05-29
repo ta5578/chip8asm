@@ -6,8 +6,8 @@ supports.
 ## Supported Op Codes
 [Wikipedia](https://en.wikipedia.org/wiki/CHIP-8#Virtual_machine_description)
 
-| Name | Opcode | Description |
-| -----|--------|------------ |
+| Name | Opcode | Description                                |
+| -----|--------|------------------------------------------- |
 |`SYS` | `0NNN` | System call. Not used |
 |`CLR` | `00E0` | Clears the screen |
 |`RET` | `00EE` | Returns from a subroutine |
@@ -42,7 +42,6 @@ supports.
 |`SILS`| `FX29` | Sets I to the location of the sprite of character in X |
 |`BCD` | `FC33` | Stores binary-coded decimal representation of register X |
 |`DUMP`| `FX55` | Dumps the values of register 0 - X in memory starting at I
-|`DUMPR`| `FX65` | Fills register 0 - X with values from memory starting at I | 
 
 Although these aren't supported by the official VM documentation, these are
 added for convenience by the assembler. Note the lack of an opcode.
