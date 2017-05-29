@@ -31,10 +31,7 @@ supports.
 |`LOADI`| `ANNN` | Sets register I to value of NNN |
 |`JMP0`| `BNNN` | Jumps to the address NNN plus the value in register 0 |
 |`RAND`| `CXNN` | Sets register X to result of NN & random number |
-|`DRAW`| `DXYN` | Draws a sprite at coord (X,Y) at width 8 pixels and height of
-N pixels. Each row of 8 pxels is read starting from address in register I.
-Register F is set to 1 if any pixels are flipped from set to unset when the
-sprite is drawn and to 0 if that doesn't happen |
+|`DRAW`| `DXYN` | Draws a sprite at coord (X,Y) |
 |`SKK`| `EX9E` | Skips the next instruction if the key stored in X is pressed |
 |`SKNK`| `EXA1` | Skips the next instruction if key in X is not pressed |
 |`DELA`| `FX07` | Sets register X to the value of the delay timer |
@@ -43,13 +40,9 @@ sprite is drawn and to 0 if that doesn't happen |
 |`SNDR`| `FX18` | Sets the sound timer to value of register Y |
 |`ADDI`| `FX1E` | Adds register X to register I |
 |`SILS`| `FX29` | Sets I to the location of the sprite of character in X |
-|`BCD` | `FC33` | Stores binary-coded decimal representation of register X, with
-the most significant of three digits at the address in I, the middle digit at
-I plus 1, and the least significant digit in I plus 2 |
-|`DUMP`| `FX55` | Dumps the values of register 0 - X in memory starting at the
-memory address stored in I |
-|`DUMPR`| `FX65` | Fills register 0 - X with values from memory starting at the
-memory address stored in I |
+|`BCD` | `FC33` | Stores binary-coded decimal representation of register X |
+|`DUMP`| `FX55` | Dumps the values of register 0 - X in memory starting at I
+|`DUMPR`| `FX65` | Fills register 0 - X with values from memory starting at I | 
 
 Although these aren't supported by the official VM documentation, these are
 added for convenience by the assembler. Note the lack of an opcode.
