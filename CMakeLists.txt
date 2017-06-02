@@ -2,11 +2,12 @@ cmake_minimum_required(VERSION 3.2)
 
 project(chip8asm)
 
-include_directories(include)
+add_subdirectory(src)
+add_subdirectory(test)
 
-file(GLOB_RECURSE SOURCES "src/*.c")
+enable_testing()
 
-add_executable(chip8asm ${SOURCES})
+add_test(NAME Test COMMAND chip8asmTest)
 
 set(CMAKE_C_FLAGS "--std=c99 -Wall -Wextra")
 
