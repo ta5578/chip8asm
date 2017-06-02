@@ -1,10 +1,27 @@
 # Chip8 VM Assembler &copy; Tamer Aly 2017
 
-This is an assembler for the CHIP8 VM. It supports all 35 opcodes that the VM
-supports.
+This is an assembler for the [chip8 VM](https://en.wikipedia.org/wiki/CHIP-8#Virtual_machine_description). As input, it takes an input `.asm` assembly file and converts it into a `ROM` file that a chip8 VM can run.
+
+## Building and Testing
+The assembler source and tests are built using cmake. You need to have cmake
+installed. To build the source the proper way (in an out-of-source build), create a directory and run cmake.
+```
+mkdir build
+cd build
+cmake ..
+```
+This will build the sources into the build directory that was created and create
+a test binary under the `test` directory. To run the tests, simply run the executableinside of the `test` directory that was created (`chip8asmTest`).
+
+## Running the Assembler
+As mentioned, the assembler takes an input `.asm` assembly file (see below for
+an example) and assembles it into a `ROM` file that a chip8 VM can emulate.
+Additional options are supported by the assembler like dumping the assembled
+statements with memory locations to stdout as well as dumping the list of
+supported op codes. For a full list of options, run the assembler with the `-h`
+flag.
 
 ## Supported Op Codes
-[Wikipedia](https://en.wikipedia.org/wiki/CHIP-8#Virtual_machine_description)
 
 | Name | Opcode | Description |
 | -----|--------|------------------------------------------- |

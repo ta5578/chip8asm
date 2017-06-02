@@ -9,6 +9,11 @@
 
 extern void TestInitParser(CuTest*);
 extern void TestFreeParser(CuTest*);
+extern void TestGetTokenStartWithLabel(CuTest*);
+extern void TestGetTokenStartWithOperator(CuTest*);
+extern void TestGetTokenEmptyBuf(CuTest*);
+extern void TestGetTokenSkipCommentsSemiColonAttached(CuTest*);
+extern void TestGetTokenSkipCommentsSemiColonSpaced(CuTest*);
 
 
 void RunAllTests(void) 
@@ -19,6 +24,11 @@ void RunAllTests(void)
 
     SUITE_ADD_TEST(suite, TestInitParser);
     SUITE_ADD_TEST(suite, TestFreeParser);
+    SUITE_ADD_TEST(suite, TestGetTokenStartWithLabel);
+    SUITE_ADD_TEST(suite, TestGetTokenStartWithOperator);
+    SUITE_ADD_TEST(suite, TestGetTokenEmptyBuf);
+    SUITE_ADD_TEST(suite, TestGetTokenSkipCommentsSemiColonAttached);
+    SUITE_ADD_TEST(suite, TestGetTokenSkipCommentsSemiColonSpaced);
 
     CuSuiteRun(suite);
     CuSuiteSummary(suite, output);
