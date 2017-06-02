@@ -3,7 +3,7 @@
 This is an assembler for the [chip8 VM](https://en.wikipedia.org/wiki/CHIP-8#Virtual_machine_description). As input, it takes an input `.asm` assembly file and converts it into a `ROM` file that a chip8 VM can run.
 
 ## Building and Testing
-The assembler source and tests are built using cmake. You need to have cmake
+The assembler source and tests are built using `cmake`. You need to have `cmake`
 installed. To build the source the proper way (in an out-of-source build), create a directory and run cmake.
 ```
 mkdir build
@@ -11,11 +11,11 @@ cd build
 cmake ..
 ```
 This will build the sources into the build directory that was created and create
-a test binary under the `test` directory. To run the tests, simply run the executableinside of the `test` directory that was created (`chip8asmTest`).
+a test binary under the `test` directory. To run the tests, simply run the executable in the `test` directory that was created (`chip8asmTest`).
 
 ## Running the Assembler
-As mentioned, the assembler takes an input `.asm` assembly file (see below for
-an example) and assembles it into a `ROM` file that a chip8 VM can emulate.
+As mentioned, the assembler takes a `.asm` assembly file (see below for
+an example) as input and assembles it into a `ROM` file that a chip8 VM can emulate.
 Additional options are supported by the assembler like dumping the assembled
 statements with memory locations to stdout as well as dumping the list of
 supported op codes. For a full list of options, run the assembler with the `-h`
@@ -100,5 +100,6 @@ sprite:
     LB $90
 ```
 
-## Referenced Libraries
+## Libraries and Tools
 * [CuTest C Unit Testing](http://cutest.sourceforge.net/)
+* [CMake] (https://cmake.org/)
