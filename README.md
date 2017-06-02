@@ -102,4 +102,4 @@ sprite:
 
 ## Libraries and Tools
 * [CuTest C Unit Testing](http://cutest.sourceforge.net/)
-* [CMake] (https://cmake.org/)
+* [CMake](https://cmake.org/)
