@@ -52,7 +52,9 @@ void init_label(Label *label, const char *name, size_t len, uint16_t addr)
     assert(label); assert(name); assert(len < CHIP8_MAX_LABEL_NAME_LENGTH);
 
     label->name[len - 1] = '\0';
-    strncpy(label->name, name, len);
+    /* We don't want to copy the ':' in the label name */
+    strncpy(label->name, name, len - 1);
+    label->len = len;
     label->addr = addr;
 }
 
@@ -64,6 +66,7 @@ void init_generator(BinGenerator *gen, AsmParser *parser)
     gen->op_table = init_op_table();
     gen->current_addr = 0;
     gen->label_count = 0;
+    gen->state = START;
 }
 
 bool generate_bin(BinGenerator *gen, AsmOpts *opts)
@@ -80,53 +83,63 @@ bool generate_bin(BinGenerator *gen, AsmOpts *opts)
     return success;
 }
 
+/* In the start state, we expect either a label or operator */
+static bool process_start_state(BinGenerator *gen, const char *token, size_t len)
+{
+    if (!is_operator(token, len, gen->op_table)) {
+        if (!is_label(token, len)) {
+            error_msg(token, len, " is not a valid operator or label!");   
+            return false;
+        } else {
+            stdout_msg(token, len, " recognized as a label!");
+            Label label;
+            init_label(&label, token, len, gen->current_addr);
+            gen->labels[gen->label_count++] = label;
+        }
+    } else {
+        stdout_msg(token, len, " recognized as an operator!");
+        gen->parser->last_token = token;
+        gen->parser->last_token_size = len;
+        gen->state = OPERATOR;
+    }
+    return true;
+}
+
+static bool process_operator_state(BinGenerator *gen, const char *token, size_t len)
+{
+    if (!is_operand(token, len, gen->parser->last_token, gen->parser->last_token_size)) {
+        print_token(token, len);
+        fprintf(stderr, " is not a valid operand for operator ");
+        print_token(gen->parser->last_token, gen->parser->last_token_size);
+        putchar('\n');
+        return false;
+    } else {
+        print_token(token, len);
+        fprintf(stdout, " is recognized as an operand for operator ");
+        print_token(gen->parser->last_token, gen->parser->last_token_size);
+        putchar('\n');
+        gen->state = START;
+    }
+    return true;
+}
+
 bool process_token(BinGenerator *gen, const char *token, size_t size)
 {
     assert(gen); assert(token);
-    return true;
 
     if (size == 0) {
         return true;
     }
 
-    typedef enum { START = 0, OPERATOR } State;
-    static State state = START;
-    static const char *last_op = NULL;
-    static size_t last_op_size = 0;
-
-    switch (state) {
-    /* In the start state, we expect either a label or operator */
+    switch (gen->state) {
     case START:
-        if (!is_operator(token, size, gen->op_table)) {
-            if (!is_label(token, size)) {
-                error_msg(token, size, " is not a valid operator or label!");   
-                return false;
-            } else {
-                stdout_msg(token, size, " recognized as a label!");
-                Label label;
-                init_label(&label, token, size - 1, gen->current_addr);
-                gen->labels[gen->label_count++] = label;
-            }
-        } else {
-            stdout_msg(token, size, " recognized as an operator!");
-            last_op = token;
-            last_op_size = size;
-            state = OPERATOR;
+        if (!process_start_state(gen, token, size)) {
+            return false;
         }
         break;
     case OPERATOR:
-        if (!is_operand(token, size, last_op, last_op_size)) {
-            print_token(token, size);
-            fprintf(stderr, " is not a valid operand for operator ");
-            print_token(last_op, last_op_size);
-            putchar('\n');
+        if (!process_operator_state(gen, token, size)) {
             return false;
-        } else {
-            print_token(token, size);
-            fprintf(stdout, " is recognized as an operand for operator ");
-            print_token(last_op, last_op_size);
-            putchar('\n');
-            state = START;
         }
         break;
     }
