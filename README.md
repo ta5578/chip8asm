@@ -75,7 +75,7 @@ Operands may be one of three different types:
 | ---- | ------- | ----------- |
 | Register | `r4`| Registers are in the range 0 - F and start with `r` or `R`. |
 | Hex Value | `$123` | Specifies a hex value. _Must_ begin with `$`. |
-| Label | `label:` | Labels may be a string that _must_ end in a `:`. |
+| Label | `label:` | Labels are a string with maximum size of CHIP8_MAX_LABEL_NAME_LENGTH that _must_ end in a `:`. |
 
 ## Example
 ```
