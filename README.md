@@ -53,13 +53,13 @@ flag.
 |`SKNK`| `EXA1` | 1 | Skips the next instruction if key in X is not pressed |
 |`DELA`| `FX07` | 1 | Sets register X to the value of the delay timer |
 |`KEYW`| `FX0A` | 1 | A key press is awaited then stored in register X (BLOCKING)|
-|`DELR`| `FX15` | 1 |Sets the delay timer to value of register X |
-|`SNDR`| `FX18` | 1 |Sets the sound timer to value of register X |
-|`ADDI`| `FX1E` | 1 |Adds register X to register I |
-|`SILS`| `FX29` | 1 |Sets I to the location of the sprite of character in X |
-|`BCD` | `FX33` | 1 |Stores binary-coded decimal representation of register X |
-|`DUMP`| `FX55` | 1 |Dumps the values of register 0 - X in memory starting at I |
-|`DUMPI`| `FX55` | 1 |Fills register 0 - X with values from memory starting at I |
+|`DELR`| `FX15` | 1 | Sets the delay timer to value of register X |
+|`SNDR`| `FX18` | 1 | Sets the sound timer to value of register X |
+|`ADDI`| `FX1E` | 1 | Adds register X to register I |
+|`SILS`| `FX29` | 1 | Sets I to the location of the sprite of character in X |
+|`BCD` | `FX33` | 1 | Stores binary-coded decimal representation of register X |
+|`DUMP`| `FX55` | 1 | Dumps the values of register 0 - X in memory starting at I |
+|`DUMPI`| `FX55` | 1 | Fills register 0 - X with values from memory starting at I |
 
 Although these aren't supported by the official VM documentation, these are
 added for convenience by the assembler. Note the lack of an opcode.
