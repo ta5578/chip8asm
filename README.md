@@ -24,7 +24,7 @@ flag.
 ## Supported Op Codes
 
 | Name | Opcode | Count | Description |
-| -----|--------|------------------------------------------- |
+| -----|--------|-------|----------------------------------- |
 |`SYS` | `0NNN` | 1 | System call. Not used |
 |`CLR` | `00E0` | 0 | Clears the screen |
 |`RET` | `00EE` | 0 | Returns from a subroutine |
