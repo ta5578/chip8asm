@@ -23,43 +23,43 @@ flag.
 
 ## Supported Op Codes
 
-| Name | Opcode | Description |
+| Name | Opcode | Count | Description |
 | -----|--------|------------------------------------------- |
-|`SYS` | `0NNN` | System call. Not used |
-|`CLR` | `00E0` | Clears the screen |
-|`RET` | `00EE` | Returns from a subroutine |
-|`JMP` | `1NNN` | Go to address NNN |
-|`CALL`| `2NNN` | Calls routine at NNN |
-|`SKE` | `3XNN` | Skips the next instruction if register X equals NN |
-|`SKNE`| `4XNN` | Skips the next instruction if register X does NOT equal NN |
-|`SKRE`| `5XY0` | Skips the next instruction if register X equals register Y |
-|`LOAD`| `6XNN` | Sets register X to NN |
-|`ADD` | `7XNN` | Adds NN to register X |
-|`ASN` | `8XY0` | Assigns the value in register X to register Y |
-|`OR`  | `8XY1` | Sets register X to register X \| register Y |
-|`AND` | `8XY2` | Sets register X to register X & register Y |
-|`XOR` | `8XY3` | Sets register X to register X ^ register Y |
-|`ADDR`| `8XY4` | Adds register Y to register X. Register F set on carry |
-|`SUB` | `8XY5` | Subtracts register Y from register X. Register F set borrow |
-|`SHR` | `8XY6` | Register F set to LSB of register X. X is shifted right 1 |
-|`SUBR`| `8XY7` | Register X is set to register Y - register X |
-|`SHL` | `8XYE` | Register F set to MSB of register X. X is shifted left 1 |
-|`SKRNE`| `9XY0` | Skips the next instruction if register X != register Y |
-|`LOADI`| `ANNN` | Sets register I to value of NNN |
-|`JMP0`| `BNNN` | Jumps to the address NNN plus the value in register 0 |
-|`RAND`| `CXNN` | Sets register X to result of NN & random number |
-|`DRAW`| `DXYN` | Draws a sprite at coord (X,Y) |
-|`SKK`| `EX9E` | Skips the next instruction if the key stored in X is pressed |
-|`SKNK`| `EXA1` | Skips the next instruction if key in X is not pressed |
-|`DELA`| `FX07` | Sets register X to the value of the delay timer |
-|`KEYW`| `FX0A` | A key press is awaited then stored in register X (BLOCKING)|
-|`DELR`| `FX15` | Sets the delay timer to value of register X |
-|`SNDR`| `FX18` | Sets the sound timer to value of register X |
-|`ADDI`| `FX1E` | Adds register X to register I |
-|`SILS`| `FX29` | Sets I to the location of the sprite of character in X |
-|`BCD` | `FX33` | Stores binary-coded decimal representation of register X |
-|`DUMP`| `FX55` | Dumps the values of register 0 - X in memory starting at I |
-|`DUMPI`| `FX55` | Fills register 0 - X with values from memory starting at I |
+|`SYS` | `0NNN` | 1 | System call. Not used |
+|`CLR` | `00E0` | 0 | Clears the screen |
+|`RET` | `00EE` | 0 | Returns from a subroutine |
+|`JMP` | `1NNN` | 1 | Go to address NNN |
+|`CALL`| `2NNN` | 1 | Calls routine at NNN |
+|`SKE` | `3XNN` | 2 | Skips the next instruction if register X equals NN |
+|`SKNE`| `4XNN` | 2 | Skips the next instruction if register X does NOT equal NN |
+|`SKRE`| `5XY0` | 2 | Skips the next instruction if register X equals register Y |
+|`LOAD`| `6XNN` | 2 | Sets register X to NN |
+|`ADD` | `7XNN` | 2 | Adds NN to register X |
+|`ASN` | `8XY0` | 2 | Assigns the value in register X to register Y |
+|`OR`  | `8XY1` | 2 | Sets register X to register X \| register Y |
+|`AND` | `8XY2` | 2 | Sets register X to register X & register Y |
+|`XOR` | `8XY3` | 2 | Sets register X to register X ^ register Y |
+|`ADDR`| `8XY4` | 2 | Adds register Y to register X. Register F set on carry |
+|`SUB` | `8XY5` | 2 | Subtracts register Y from register X. Register F set borrow |
+|`SHR` | `8XY6` | 1 | Register F set to LSB of register X. X is shifted right 1 |
+|`SUBR`| `8XY7` | 2 | Register X is set to register Y - register X |
+|`SHL` | `8XYE` | 1 | Register F set to MSB of register X. X is shifted left 1 |
+|`SKRNE`| `9XY0` | 2 | Skips the next instruction if register X != register Y |
+|`LOADI`| `ANNN` | 1 | Sets register I to value of NNN |
+|`JMP0`| `BNNN` | 1 | Jumps to the address NNN plus the value in register 0 |
+|`RAND`| `CXNN` | 2 | Sets register X to result of NN & random number |
+|`DRAW`| `DXYN` | 3 | Draws a sprite at coord (X,Y) |
+|`SKK`| `EX9E` | 1 | Skips the next instruction if the key stored in X is pressed |
+|`SKNK`| `EXA1` | 1 | Skips the next instruction if key in X is not pressed |
+|`DELA`| `FX07` | 1 | Sets register X to the value of the delay timer |
+|`KEYW`| `FX0A` | 1 | A key press is awaited then stored in register X (BLOCKING)|
+|`DELR`| `FX15` | 1 |Sets the delay timer to value of register X |
+|`SNDR`| `FX18` | 1 |Sets the sound timer to value of register X |
+|`ADDI`| `FX1E` | 1 |Adds register X to register I |
+|`SILS`| `FX29` | 1 |Sets I to the location of the sprite of character in X |
+|`BCD` | `FX33` | 1 |Stores binary-coded decimal representation of register X |
+|`DUMP`| `FX55` | 1 |Dumps the values of register 0 - X in memory starting at I |
+|`DUMPI`| `FX55` | 1 |Fills register 0 - X with values from memory starting at I |
 
 Although these aren't supported by the official VM documentation, these are
 added for convenience by the assembler. Note the lack of an opcode.
