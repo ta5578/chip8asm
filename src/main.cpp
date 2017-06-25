@@ -12,6 +12,32 @@
 
 static bool parse_args(int argc, char **argv, AsmOpts *opts)
 {
+    if (argc < 2) {
+        return false;
+    }
+
+    std::string first(argv[1]);
+    if (first == "-h") {
+        opts->show_help = true;
+        return true;
+    }
+    opts->in_file = argv[1];
+
+    for (int i = 2; i < argc; ++i) {
+        std::string arg(argv[i]);
+        if (arg == "--dump-asm") {
+            opts->dump_asm = true;
+        } else if (arg == "--output" || arg == "-o") {
+            opts->out_file = argv[i + 1];
+            if (opts->out_file == nullptr) {
+                std::cerr << "Output flag specified without an output file!\n";
+                return false;
+            }
+            ++i;
+        } else {
+            return false;
+        }
+    }
     return true;
 }
 
@@ -41,6 +67,7 @@ int main(int argc, char **argv)
         }
 
         std::cout << "Reading from " << opts.in_file << " and writing to " << opts.out_file << "\n";
+        std::cout << "Dump ASM: " << (opts.dump_asm ? "true" : "false") << "\n";
 
         FileReader reader(argv[1]);
         AsmLexer lexer(reader);

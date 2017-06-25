@@ -9,6 +9,7 @@ class AsmLexer {
 private:
     std::string buf;
     size_t cursor;
+    void skip_white_space();
 
 public:
     AsmLexer(FileReader& reader);
