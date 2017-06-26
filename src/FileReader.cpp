@@ -1,5 +1,7 @@
 #include "FileReader.h"
 #include <stdexcept>
+#include <iostream>
+#include <cstdlib>
 
 FileReader::FileReader(const char *path, FileBit bit)
 {
@@ -21,10 +23,13 @@ FileReader::FileReader(const char *path, FileBit bit)
 
 std::string FileReader::read(size_t bytes)
 {
-    std::string s;
-    s.reserve(bytes);
-    fread(&s[0], sizeof(s[0]), bytes, fp.get());
-    return s;
+    char *s = static_cast<char*>(std::malloc(bytes + 1));
+    if (!s) { return ""; }
+    s[bytes] = '\0';
+    fread(s, sizeof(*s), bytes, fp.get());
+    std::string ret(s);
+    std::free(s);
+    return ret;
 }
 
 std::string FileReader::read_all()

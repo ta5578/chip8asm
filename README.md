@@ -39,13 +39,13 @@ flag.
 |`OR`  | `8XY1` | 2 | Sets register X to register X \| register Y |
 |`AND` | `8XY2` | 2 | Sets register X to register X & register Y |
 |`XOR` | `8XY3` | 2 | Sets register X to register X ^ register Y |
-|`ADDR`| `8XY4` | 2 | Adds register Y to register X. Register F set on carry |
+|`RADD`| `8XY4` | 2 | Adds register Y to register X. Register F set on carry |
 |`SUB` | `8XY5` | 2 | Subtracts register Y from register X. Register F set borrow |
 |`SHR` | `8XY6` | 1 | Register F set to LSB of register X. X is shifted right 1 |
-|`SUBR`| `8XY7` | 2 | Register X is set to register Y - register X |
+|`RSUB`| `8XY7` | 2 | Register X is set to register Y - register X |
 |`SHL` | `8XYE` | 1 | Register F set to MSB of register X. X is shifted left 1 |
 |`SKRNE`| `9XY0` | 2 | Skips the next instruction if register X != register Y |
-|`LOADI`| `ANNN` | 1 | Sets register I to value of NNN |
+|`ILOAD`| `ANNN` | 1 | Sets register I to value of NNN |
 |`JMP0`| `BNNN` | 1 | Jumps to the address NNN plus the value in register 0 |
 |`RAND`| `CXNN` | 2 | Sets register X to result of NN & random number |
 |`DRAW`| `DXYN` | 3 | Draws a sprite at coord (X,Y) |
@@ -59,7 +59,7 @@ flag.
 |`SILS`| `FX29` | 1 | Sets I to the location of the sprite of character in X |
 |`BCD` | `FX33` | 1 | Stores binary-coded decimal representation of register X |
 |`DUMP`| `FX55` | 1 | Dumps the values of register 0 - X in memory starting at I |
-|`DUMPI`| `FX65` | 1 | Fills register 0 - X with values from memory starting at I |
+|`IDUMP`| `FX65` | 1 | Fills register 0 - X with values from memory starting at I |
 
 Although these aren't supported by the official VM documentation, these are
 added for convenience by the assembler. Note the lack of an opcode.
@@ -75,24 +75,24 @@ Operands may be one of three different types:
 | ---- | ------- | ----------- |
 | Register | `r4`| Registers are in the range 0 - F and start with `r` or `R`. |
 | Hex Value | `$123` | Specifies a hex value. _Must_ begin with `$`. |
-| Label | `label:` | Labels are a string with maximum size of CHIP8_MAX_LABEL_NAME_LENGTH that _must_ end in a `:`. |
+| Label | `label` | Labels are simply strings used to denote a specific block of code. |
 
 ## Example
 ```
 ; This is a comment in the assembly file
 ; This will print the capital letter 'A' to the screen
 
-start:
+start
     LOADI sprite ; load the sprite location into index
     LOAD r0,$A ; load 10 into register 0
     LOAD r1,$5 ; load 5 into register 1
     DRAW r0,r1,$5 ; draw a 5 byte sprite at (x,y) specified in r0, r1
 
-end:
+end
     JMP end ; loop indefinitely
 
 ; The capital letter 'A'
-sprite:
+sprite
     LB $F0
     LB $90
     LB $F0
@@ -103,5 +103,4 @@ sprite:
 See the `/examples` directory for more examples.
 
 ## Libraries and Tools
-* [CuTest C Unit Testing](http://cutest.sourceforge.net/)
 * [CMake](https://cmake.org/)

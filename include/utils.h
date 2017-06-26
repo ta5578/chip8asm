@@ -11,7 +11,7 @@
  * Each opcode will have a function returning a 16 bit value
  * given a vector of arguments
  */
-typedef std::function<uint16_t(std::vector<std::string>)> OpFxn;
+typedef std::function<uint16_t(const std::vector<std::string>&)> OpFxn;
 
 /* Given ^\$[0-9]+ string and return a hexadecimal representation */
 inline uint16_t to_hex(const std::string& s)
@@ -101,7 +101,7 @@ inline uint16_t fxnXOR(const std::vector<std::string>& args)
     return 0x8000 | to_hex(args[0]) << 8 | to_hex(args[1]) << 4 | 0x3;
 }
 
-inline uint16_t fxnADDR(const std::vector<std::string>& args)
+inline uint16_t fxnRADD(const std::vector<std::string>& args)
 {
     assert(args.size() == 2);
     return 0x8000 | to_hex(args[0]) << 8 | to_hex(args[1]) << 4 | 0x4;
@@ -119,7 +119,7 @@ inline uint16_t fxnSHR(const std::vector<std::string>& args)
     return 0x8000 | to_hex(args[0]) << 8 | to_hex(args[1]) << 4 | 0x6;
 }
 
-inline uint16_t fxnSUBR(const std::vector<std::string>& args)
+inline uint16_t fxnRSUB(const std::vector<std::string>& args)
 {
     assert(args.size() == 2);
     return 0x8000 | to_hex(args[0]) << 8 | to_hex(args[1]) << 4 | 0x7;
@@ -137,7 +137,7 @@ inline uint16_t fxnSKRNE(const std::vector<std::string>& args)
     return 0x9000 | to_hex(args[0]) << 8 | to_hex(args[1]) << 4;
 }
 
-inline uint16_t fxnLOADI(const std::vector<std::string>& args)
+inline uint16_t fxnILOAD(const std::vector<std::string>& args)
 {
     assert(args.size() == 1);
     return 0xA000 | to_hex(args[0]);
@@ -221,10 +221,16 @@ inline uint16_t fxnDUMP(const std::vector<std::string>& args)
     return 0xF000 | to_hex(args[0]) << 8 | 0x0055;
 }
 
-inline uint16_t fxnDUMPI(const std::vector<std::string>& args)
+inline uint16_t fxnIDUMP(const std::vector<std::string>& args)
 {
     assert(args.size() == 1);
     return 0xF000 | to_hex(args[0]) << 8 | 0x0065;
+}
+
+inline uint16_t fxnLB(const std::vector<std::string>& args)
+{
+    assert(args.size() == 1);
+    return 0xFFFF;
 }
 
 static const std::map<std::string, OpFxn> OPERATORS = {
@@ -242,13 +248,13 @@ static const std::map<std::string, OpFxn> OPERATORS = {
     {"OR", fxnOR },
     {"AND", fxnAND },
     {"XOR", fxnXOR },
-    {"ADDR", fxnADDR },
+    {"RADD", fxnRADD },
     {"SUB", fxnSUB },
     {"SHR", fxnSHR },
-    {"SUBR", fxnSUBR },
+    {"RSUB", fxnRSUB },
     {"SHL", fxnSHL },
     {"SKRNE", fxnSKRNE },
-    {"LOADI", fxnLOADI },
+    {"ILOAD", fxnILOAD },
     {"JMP0", fxnJMP0 },
     {"RAND", fxnRAND },
     {"DRAW", fxnDRAW },
@@ -262,7 +268,8 @@ static const std::map<std::string, OpFxn> OPERATORS = {
     {"SILS", fxnSILS },
     {"BCD", fxnBCD },
     {"DUMP", fxnDUMP },
-    {"DUMPI", fxnDUMPI }
+    {"IDUMP", fxnIDUMP },
+    {"LB", fxnLB}
 };
 
 inline bool is_operator(const std::string& s)
@@ -270,25 +277,16 @@ inline bool is_operator(const std::string& s)
     return OPERATORS.find(s) != OPERATORS.end();
 }
 
+inline bool is_valid_hex_char(char c)
+{
+    const char lc = std::tolower(c);
+    return std::isdigit(lc) || (lc >= 'a' && lc <= 'f');
+}
+
 inline bool is_register(const std::string& s)
 {
     if (s.size() != 2) {
         return false;
     }
-    const char c1 = std::tolower(s[0]);
-    const char c2 = std::tolower(s[1]);
-    return c1 == 'r' && (std::isdigit(c2) || (c2 >= 'a' && c2 <= 'f'));
-}
-
-inline bool is_hex(const std::string& s)
-{
-    if (s.empty() || s.size() > 4 || s[0] != '$') {
-        return false;
-    }
-    for (size_t i = 1; i < s.size(); ++i) {
-        if (!isdigit(s[i])) {
-            return false;
-        }
-    }
-    return true;
+    return std::tolower(s[0]) == 'r' && is_valid_hex_char(s[1]);
 }

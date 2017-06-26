@@ -9,6 +9,7 @@ BinGenerator::BinGenerator(const AsmParser& parser)
 
 std::string BinGenerator::generate_bin()
 {
+    parser.parse();
     return "";
 }
 

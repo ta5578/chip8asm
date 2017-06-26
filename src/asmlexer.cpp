@@ -1,20 +1,13 @@
 #include "asmlexer.h"
 #include <cctype>
 #include "utils.h"
+#include <iostream>
 
 AsmLexer::AsmLexer(FileReader& reader) : buf(reader.read_all()), cursor(0) {}
 
 Token AsmLexer::get_next_token()
 {
     skip_white_space();
-
-    /* We don't want comment tokens */
-    if (buf[cursor] == ';') {
-        while (cursor < buf.size() && buf[cursor] != '\n') {
-            ++cursor;
-        }
-        return get_next_token();
-    }
 
     std::string tok;
     tok.reserve(10);
@@ -24,10 +17,18 @@ Token AsmLexer::get_next_token()
             return {TokenType::COMMA, tok};
         } else if (is_operator(tok)) {
             return {TokenType::OPERATOR, tok};
-        } else if (is_hex(tok)) {
+        } else if (tok == "$") {
+            while (cursor < buf.size() && is_valid_hex_char(buf[cursor])) {
+                tok += buf[cursor++];
+            }
             return {TokenType::HEX, tok};
         } else if (is_register(tok)) {
             return {TokenType::REGISTER, tok};
+        } else if (tok == ";") {
+            while (cursor < buf.size() && buf[cursor] != '\n') {
+                ++cursor;
+            }
+            return get_next_token();
         }
     }
     return {TokenType::LABEL, tok};
