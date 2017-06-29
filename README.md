@@ -46,7 +46,7 @@ flag.
 |`SHL` | `8XYE` | 1 | Register F set to MSB of register X. X is shifted left 1 |
 |`SKRNE`| `9XY0` | 2 | Skips the next instruction if register X != register Y |
 |`ILOAD`| `ANNN` | 1 | Sets register I to value of NNN |
-|`JMP0`| `BNNN` | 1 | Jumps to the address NNN plus the value in register 0 |
+|`ZJMP`| `BNNN` | 1 | Jumps to the address NNN plus the value in register 0 |
 |`RAND`| `CXNN` | 2 | Sets register X to result of NN & random number |
 |`DRAW`| `DXYN` | 3 | Draws a sprite at coord (X,Y) |
 |`SKK`| `EX9E` | 1 | Skips the next instruction if the key stored in X is pressed |
@@ -55,7 +55,7 @@ flag.
 |`KEYW`| `FX0A` | 1 | A key press is awaited then stored in register X (BLOCKING)|
 |`DELR`| `FX15` | 1 | Sets the delay timer to value of register X |
 |`SNDR`| `FX18` | 1 | Sets the sound timer to value of register X |
-|`ADDI`| `FX1E` | 1 | Adds register X to register I |
+|`IADD`| `FX1E` | 1 | Adds register X to register I |
 |`SILS`| `FX29` | 1 | Sets I to the location of the sprite of character in X |
 |`BCD` | `FX33` | 1 | Stores binary-coded decimal representation of register X |
 |`DUMP`| `FX55` | 1 | Dumps the values of register 0 - X in memory starting at I |

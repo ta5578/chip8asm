@@ -6,7 +6,7 @@
 class ParseException : public std::exception {
 
 private:
-    const std::string& msg;
+    const std::string msg;
 
 public:
     ParseException(const std::string& msg = "") : msg(msg) {}

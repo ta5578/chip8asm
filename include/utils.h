@@ -6,6 +6,7 @@
 #include <functional>
 #include <vector>
 #include <cassert>
+#include <initializer_list>
 
 /*
  * Each opcode will have a function returning a 16 bit value
@@ -289,4 +290,16 @@ inline bool is_register(const std::string& s)
         return false;
     }
     return std::tolower(s[0]) == 'r' && is_valid_hex_char(s[1]);
+}
+
+/* TODO: Maybe use var args template */
+template <class T>
+inline bool one_of(const T& t, const std::initializer_list<T> list)
+{
+    for (const auto& elem : list) {
+        if (t == elem) {
+            return true;
+        }
+    }
+    return false;
 }

@@ -13,32 +13,14 @@ void AsmParser::parse()
     do {
         tok = lexer.get_next_token();
         std::string str = tok.second;
-        std::cout << "Retrieved token " << str << "\n";
+        std::cout << tok;
         auto type = tok.first;
         if (type == TokenType::LABEL) {
-            std::cout << str << " is a label!\n";
-            // if (label_exists(str)) {
-            //     throw ParseException(str + " is already a label!");
-            // } else {
-            //     parse_tree.insert({str, std::vector<uint16_t>()});
-            //     last_label = str;
-            // }
+            process_label(str);
         } else if (type == TokenType::OPERATOR) {
-            std::cout << str << " is an operator!\n";
-            if (str == "SYS") {
-                ; /* Not implemented */
-            } else if (str == "CLR" || str == "RET") {
-                auto ops = parse_tree[last_label];
-                auto op = get_opcode(str, {});
-                ops.push_back(op);
-            } else if (str == "JMP" || str == "CALL") {
-                auto n_label = lexer.get_next_token();
-                if (n_label.first != TokenType::LABEL) {
-                    throw ParseException(str + " expects a label as an operand!");
-                }
-            }
-        } else if (type == TokenType::HEX) {
-            std::cout << str << " is a hex value!\n";
+            process_operator(str);
+        } else {
+            throw ParseException(str + " is not a valid starting token! (OPERATOR|LABEL) expected!");
         }
     } while (!tok.second.empty());
 }
@@ -52,4 +34,75 @@ uint16_t AsmParser::get_opcode(const std::string& op, const std::vector<std::str
 {
     auto itr = OPERATORS.find(op);
     return itr->second(args);
+}
+
+void AsmParser::process_label(const std::string& label)
+{
+            // if (label_exists(str)) {
+            //     throw ParseException(str + " is already a label!");
+            // } else {
+            //     parse_tree.insert({str, std::vector<uint16_t>()});
+            //     last_label = str;
+            // }
+}
+
+void AsmParser::process_operator(const std::string& str)
+{
+    /* Not implemented */
+    if (str == "SYS") {
+        return;
+    }
+
+    if (one_of<std::string>(str, {"CLR", "RET"})) {
+        // auto ops = parse_tree[last_label];
+        // auto op = get_opcode(str, {});
+        // ops.push_back(op);
+        /* Expects label or hex */
+    } else if (one_of<std::string>(str, {"JMP", "CALL", "ZJMP", "ILOAD"})) {
+        auto t1 = lexer.get_next_token();
+        if (t1.first != TokenType::LABEL && t1.first != TokenType::HEX) {
+            throw ParseException(str + " expects a label or hex address as an operand!");
+        }
+        /* Expects register, comma, and hex */
+    } else if (one_of<std::string>(str, {"SKE", "SKNE", "SKRE", "LOAD", "ADD", "RAND"})) {
+        auto t1 = lexer.get_next_token();
+        auto t2 = lexer.get_next_token();
+        auto t3 = lexer.get_next_token();
+        if (t1.first != TokenType::REGISTER && t2.first != TokenType::COMMA
+            && t3.first != TokenType::HEX) {
+            throw ParseException(str + " expects REGISTER, COMMA, HEX as operands!");
+        }
+        std::cout << t1 << t2 << t3;
+        /* Expects 2 registers */
+    } else if (one_of<std::string>(str, {"ASN", "OR", "AND", "XOR", "RADD", "SUB", "RSUB", "SKRNE", })) {
+        auto t1 = lexer.get_next_token();
+        auto t2 = lexer.get_next_token();
+        auto t3 = lexer.get_next_token();
+        if (t1.first != TokenType::REGISTER && t2.first != TokenType::COMMA
+            && t3.first != TokenType::REGISTER) {
+            throw ParseException(str + " expects REGISTER, COMMA, REGISTER as operands!");
+        }
+        /* Expects one register */
+    } else if (one_of<std::string>(str, {"SHR", "SHL", "SKK", "SKNK", "DELA", "KEYW", "DELR", "SNDR", "IADD", "SILS", "BCD", "DUMP", "IDUMP"})) {
+        auto t1 = lexer.get_next_token();
+        if (t1.first != TokenType::REGISTER) {
+            throw ParseException(str + " expects a REGISTER as operand!");
+        }
+    } else if (str == "DRAW") { /* DRAW is the only operator to take three operands */
+        auto t1 = lexer.get_next_token();
+        auto t2 = lexer.get_next_token();
+        auto t3 = lexer.get_next_token();
+        auto t4 = lexer.get_next_token();
+        auto t5 = lexer.get_next_token();
+        if (t1.first != TokenType::REGISTER && t2.first != TokenType::COMMA
+            && t3.first != TokenType::REGISTER && t4.first != TokenType::COMMA
+            && t5.first != TokenType::REGISTER) {
+            throw ParseException(str + " expects REGISTER, COMMA, REGISTER, COMMA, REGISTER as operands!");
+        }
+    } else { /* Must be special instruction LB */
+        auto t1 = lexer.get_next_token();
+        if (t1.first != TokenType::HEX) {
+            throw ParseException(str + " expects HEX operand!");
+        }
+    }
 }

@@ -9,6 +9,7 @@
 #include "asmparser.h"
 #include "bingenerator.h"
 #include <exception>
+#include "ParseException.h"
 
 static bool parse_args(int argc, char **argv, AsmOpts *opts)
 {
@@ -77,6 +78,8 @@ int main(int argc, char **argv)
 
     } catch (const std::invalid_argument& e) {
         std::cerr << "Caught invalid argument: " << e.what() << "\n";
+    } catch (const ParseException& e) {
+        std::cerr << "Caught Parse Exception: " << e.what() << "\n";
     } catch (const std::exception& e) {
         std::cerr << "Caught generic exception: " << e.what() << "\n";
     } catch (...) {
