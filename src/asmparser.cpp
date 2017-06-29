@@ -66,43 +66,67 @@ void AsmParser::process_operator(const std::string& str)
         /* Expects register, comma, and hex */
     } else if (one_of<std::string>(str, {"SKE", "SKNE", "SKRE", "LOAD", "ADD", "RAND"})) {
         auto t1 = lexer.get_next_token();
+        if (t1.first != TokenType::REGISTER) {
+            throw ParseException("REGISTER expected after " + str + "!\n");
+        }
         auto t2 = lexer.get_next_token();
+        if (t2.first != TokenType::COMMA) {
+            throw ParseException("COMMA expected after " + t1.second + "!\n");
+        }
         auto t3 = lexer.get_next_token();
-        if (t1.first != TokenType::REGISTER && t2.first != TokenType::COMMA
-            && t3.first != TokenType::HEX) {
-            throw ParseException(str + " expects REGISTER, COMMA, HEX as operands!");
+        if (t3.first != TokenType::HEX) {
+            throw ParseException("HEX expected after " + t2.second + "!\n");
         }
         std::cout << t1 << t2 << t3;
         /* Expects 2 registers */
-    } else if (one_of<std::string>(str, {"ASN", "OR", "AND", "XOR", "RADD", "SUB", "RSUB", "SKRNE", })) {
+    } else if (one_of<std::string>(str, {"ASN", "OR", "AND", "XOR", "RADD", "SUB", "RSUB", "SKRNE"})) {
         auto t1 = lexer.get_next_token();
-        auto t2 = lexer.get_next_token();
-        auto t3 = lexer.get_next_token();
-        if (t1.first != TokenType::REGISTER && t2.first != TokenType::COMMA
-            && t3.first != TokenType::REGISTER) {
-            throw ParseException(str + " expects REGISTER, COMMA, REGISTER as operands!");
+        if (t1.first != TokenType::REGISTER) {
+            throw ParseException("REGISTER expected after " + str + "!\n");
         }
+        auto t2 = lexer.get_next_token();
+        if (t2.first != TokenType::COMMA) {
+            throw ParseException("COMMA expected after " + t1.second + "!\n");
+        }
+        auto t3 = lexer.get_next_token();
+        if (t3.first != TokenType::REGISTER) {
+            throw ParseException("REGISTER expected after " + t2.second + "!\n");
+        }
+        std::cout << t1 << t2 << t3;
         /* Expects one register */
     } else if (one_of<std::string>(str, {"SHR", "SHL", "SKK", "SKNK", "DELA", "KEYW", "DELR", "SNDR", "IADD", "SILS", "BCD", "DUMP", "IDUMP"})) {
         auto t1 = lexer.get_next_token();
         if (t1.first != TokenType::REGISTER) {
-            throw ParseException(str + " expects a REGISTER as operand!");
+            throw ParseException("REGISTER expected after " + str + "!\n");
         }
+        std::cout << t1;
     } else if (str == "DRAW") { /* DRAW is the only operator to take three operands */
         auto t1 = lexer.get_next_token();
-        auto t2 = lexer.get_next_token();
-        auto t3 = lexer.get_next_token();
-        auto t4 = lexer.get_next_token();
-        auto t5 = lexer.get_next_token();
-        if (t1.first != TokenType::REGISTER && t2.first != TokenType::COMMA
-            && t3.first != TokenType::REGISTER && t4.first != TokenType::COMMA
-            && t5.first != TokenType::REGISTER) {
-            throw ParseException(str + " expects REGISTER, COMMA, REGISTER, COMMA, REGISTER as operands!");
+        if (t1.first != TokenType::REGISTER) {
+            throw ParseException("REGISTER expected after " + str + "!\n");
         }
+        auto t2 = lexer.get_next_token();
+        if (t2.first != TokenType::COMMA) {
+            throw ParseException("COMMA expected after " + t1.second + "!\n");
+        }
+        auto t3 = lexer.get_next_token();
+        if (t3.first != TokenType::REGISTER) {
+            throw ParseException("REGISTER expected after " + t2.second + "!\n");
+        }
+        auto t4 = lexer.get_next_token();
+        if (t4.first != TokenType::COMMA) {
+            throw ParseException("COMMA expected after " + t3.second + "!\n");
+        }
+        auto t5 = lexer.get_next_token();
+        if (t5.first != TokenType::HEX) {
+            throw ParseException("HEX expected after " + t4.second + "!\n");
+        }
+        std::cout << t1 << t2 << t3 << t4 << t5;
     } else { /* Must be special instruction LB */
         auto t1 = lexer.get_next_token();
         if (t1.first != TokenType::HEX) {
-            throw ParseException(str + " expects HEX operand!");
+            throw ParseException("HEX expected after " + str + "!\n");
         }
+        std::cout << t1;
     }
 }
