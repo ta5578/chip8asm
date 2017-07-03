@@ -1,30 +1,26 @@
 #pragma once
 
+#include "asmlexer.h"
 #include "vm_def.h"
-#include "asmparser.h"
-#include <set>
+#include <unordered_map>
+#include <cstdint>
+#include <vector>
 #include <string>
-
-struct Label {
-    std::string name;
-    uint16_t addr;
-    Label(std::string name, uint16_t addr) : name(name), addr(addr) {}
-};
+#include "utils.h"
 
 class BinGenerator {
+    AsmLexer lexer;
+    AsmOpts opts;
+    std::unordered_map<std::string, std::vector<uint16_t>> parse_tree;
+    std::string curr_label;
 
-private:
-    AsmParser parser;
-    std::set<Label> labels;
-    uint16_t current_addr;
-    std::string prev_tok;
-
-    enum class State {
-        START = 0,
-        OPERATOR
-    } state;
+    bool label_exists(const std::string& lbl) const;
+    uint16_t get_opcode(const std::string& op, const std::vector<std::string>& args) const;
+    void process_label(const std::string& label);
+    void process_operator(const std::string& op);
 
 public:
-    BinGenerator(const AsmParser& parser);
+    BinGenerator(const AsmLexer& lexer, const AsmOpts& opts);
+    void parse();
     std::string generate_bin();
 };

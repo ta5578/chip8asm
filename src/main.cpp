@@ -6,7 +6,6 @@
 #include "FileReader.h"
 #include "vm_def.h"
 #include "asmlexer.h"
-#include "asmparser.h"
 #include "bingenerator.h"
 #include <exception>
 #include "ParseException.h"
@@ -72,8 +71,7 @@ int main(int argc, char **argv)
 
         FileReader reader(argv[1]);
         AsmLexer lexer(reader);
-        AsmParser parser(lexer);
-        BinGenerator gen(parser);
+        BinGenerator gen(lexer, opts);
         std::cout << "Generated bin: " << gen.generate_bin() << "\n";
 
     } catch (const std::invalid_argument& e) {
