@@ -12,3 +12,8 @@ inline bool operator&(FileBit a, FileBit b)
 {
     return (static_cast<int>(a) & static_cast<int>(b)) != 0;
 }
+
+inline FileBit operator|(FileBit a, FileBit b)
+{
+    return static_cast<FileBit>(static_cast<int>(a) | static_cast<int>(b));
+}

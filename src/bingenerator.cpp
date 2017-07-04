@@ -2,7 +2,8 @@
 #include "ParseException.h"
 #include "token.h"
 
-BinGenerator::BinGenerator(const AsmLexer& lexer, const AsmOpts& opts) : lexer(lexer), opts(opts), curr_label("SOF") {}
+BinGenerator::BinGenerator(const AsmLexer& lexer, const AsmOpts& opts) : lexer(lexer), opts(opts),
+    fwriter(opts.out_file, FileBit::BINARY), curr_label("SOF"), curr_addr(0x2000) {}
 
 void BinGenerator::parse()
 {
@@ -23,6 +24,8 @@ void BinGenerator::parse()
 
 std::string BinGenerator::generate_bin()
 {
+    int a = 2;
+    fwriter.write(a);
     return "";
 }
 

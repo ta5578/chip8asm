@@ -13,7 +13,7 @@ FileReader::FileReader(const char *path, FileBit bit)
     }
     flags[2] = '\0';
 
-    FILE *file = fopen(path, flags);
+    FILE *file = std::fopen(path, flags);
     if (!file) {
         throw std::invalid_argument("The supplied path couldn't be opened in for reading!");
     }
