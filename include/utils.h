@@ -23,7 +23,7 @@ inline uint16_t to_hex(const std::string& s)
     for (auto it = hex.crbegin(); it != hex.crend(); ++it) {
         auto c = std::tolower(*it);
         if (c >= 'a' && c <= 'f') {
-            val += (c - a + 10) * scale;
+            val += (c - 'a' + 10) * scale;
         } else if (std::isdigit(c)) {
             val += (c - '0') * scale;
         }
@@ -243,7 +243,7 @@ inline uint16_t fxnIDUMP(const std::vector<std::string>& args)
 inline uint16_t fxnLB(const std::vector<std::string>& args)
 {
     assert(args.size() == 1);
-    return to_hex(args[0P]);
+    return to_hex(args[0]);
 }
 
 static const std::map<std::string, OpFxn> OPERATORS = {
