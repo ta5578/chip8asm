@@ -22,11 +22,10 @@ void BinGenerator::parse()
     } while (!tok.second.empty());
 }
 
-std::string BinGenerator::generate_bin()
+void BinGenerator::generate_bin()
 {
     int a = 2;
     fwriter.write(a);
-    return "";
 }
 
 bool BinGenerator::label_exists(const std::string& lbl) const

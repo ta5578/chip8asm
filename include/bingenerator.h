@@ -27,5 +27,5 @@ class BinGenerator {
 public:
     BinGenerator(const AsmLexer& lexer, const AsmOpts& opts);
     void parse();
-    std::string generate_bin();
+    void generate_bin();
 };

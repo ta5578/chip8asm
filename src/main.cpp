@@ -66,13 +66,14 @@ int main(int argc, char **argv)
             return EXIT_SUCCESS;
         }
 
-        std::cout << "Reading from " << opts.in_file << " and writing to " << opts.out_file << "\n";
+        std::cout << "Reading from '" << opts.in_file << "'' and writing to '" << opts.out_file << "'.\n";
         std::cout << "Dump ASM: " << (opts.dump_asm ? "true" : "false") << "\n";
 
         FileReader reader(argv[1]);
         AsmLexer lexer(reader);
         BinGenerator gen(lexer, opts);
-        std::cout << "Generated bin: " << gen.generate_bin() << "\n";
+        gen.generate_bin();
+        std::cout << "Binary ROM successfully generated!\n";
 
     } catch (const std::invalid_argument& e) {
         std::cerr << "Caught invalid argument: " << e.what() << "\n";
