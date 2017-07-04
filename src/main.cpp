@@ -73,6 +73,8 @@ int main(int argc, char **argv)
         AsmLexer lexer(reader);
         BinGenerator gen(lexer, opts);
         gen.generate_bin();
+        std::cout << "End of " << std::string("$EEE").substr(1) << "\n";
+        std::cout << "Hex: " << to_hex("$EEE") << "\n";
         std::cout << "Binary ROM successfully generated!\n";
 
     } catch (const std::invalid_argument& e) {
