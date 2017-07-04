@@ -35,16 +35,19 @@ inline uint16_t to_hex(const std::string& s)
 /* Unsupported */
 inline uint16_t fxnSYS(const std::vector<std::string>& args)
 {
+    assert(args.size() == 0);
     return 0x0;
 }
 
 inline uint16_t fxnCLR(const std::vector<std::string>& args)
 {
+    assert(args.size() == 0);
     return 0x00E0;
 }
 
 inline uint16_t fxnRET(const std::vector<std::string>& args)
 {
+    assert(args.size() == 0);
     return 0x00EE;
 }
 
