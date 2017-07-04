@@ -3,15 +3,17 @@
 This is an assembler for the [chip8 VM](https://en.wikipedia.org/wiki/CHIP-8#Virtual_machine_description). As input, it takes an input `.asm` assembly file and converts it into a `ROM` file that a chip8 VM can run.
 
 ## Building and Testing
-The assembler source and tests are built using `cmake`. You need to have `cmake`
-installed. To build the source the proper way (in an out-of-source build), create a directory and run cmake.
+The assembler source and tests are built using `cmake`. Unit testing is done via `UnitTest++`. To build the source the proper 
+way (in an out-of-source build), create a directory and run cmake.
+
 ```
 mkdir build
 cd build
 cmake ..
 ```
-This will build the sources into the build directory that was created and create
-a test binary under the `test` directory. To run the tests, simply run the executable in the `test` directory that was created (`chip8asmTest`).
+This will build the sources into the build directory and run unit tests as part of the build. 
+Note that you must have [UnitTest++ installed](https://github.com/unittest-cpp/unittest-cpp/wiki/Building-Using-CMake) in order for the unit tests to build and run. 
+If `UnitTest++` is not installed, unit tests will be skipped over and only the sources will be built.
 
 ## Running the Assembler
 As mentioned, the assembler takes a `.asm` assembly file (see below for
@@ -104,3 +106,4 @@ See the `/examples` directory for more examples.
 
 ## Libraries and Tools
 * [CMake](https://cmake.org/)
+* [UnitTest++](https://github.com/unittest-cpp/unittest-cpp/wiki/Home)
