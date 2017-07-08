@@ -1,9 +1,6 @@
 #include "UnitTest++/UnitTest++.h"
-
-TEST(Sanity)
-{
-    CHECK_EQUAL(1, 1);
-}
+#include "utils_tests.h"
+#include "lexer_tests.h"
 
 int main(int, const char**)
 {
