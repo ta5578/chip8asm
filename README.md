@@ -43,9 +43,9 @@ flag.
 |`XOR` | `8XY3` | 2 | Sets register X to register X ^ register Y |
 |`RADD`| `8XY4` | 2 | Adds register Y to register X. Register F set on carry |
 |`SUB` | `8XY5` | 2 | Subtracts register Y from register X. Register F set borrow |
-|`SHR` | `8XY6` | 1 | Register F set to LSB of register X. X is shifted right 1 |
+|`SHR` | `8X06` | 1 | Register F set to LSB of register X. X is shifted right 1 |
 |`RSUB`| `8XY7` | 2 | Register X is set to register Y - register X |
-|`SHL` | `8XYE` | 1 | Register F set to MSB of register X. X is shifted left 1 |
+|`SHL` | `8X0E` | 1 | Register F set to MSB of register X. X is shifted left 1 |
 |`SKRNE`| `9XY0` | 2 | Skips the next instruction if register X != register Y |
 |`ILOAD`| `ANNN` | 1 | Sets register I to value of NNN |
 |`ZJMP`| `BNNN` | 1 | Jumps to the address NNN plus the value in register 0 |
