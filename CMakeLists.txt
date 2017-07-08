@@ -5,6 +5,10 @@ set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_FLAGS "-Wall -Wextra -Wpedantic")
 message("Compiling with: ${CMAKE_CXX_COMPILER} ${CMAKE_CXX_FLAGS}")
 
+# Gather source files
+include_directories(include)
+file(GLOB SOURCES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} "src/*.cpp")
+
 # Look for CMake and decide whether to run unit tests
 find_package(UnitTest++)
 
@@ -25,7 +29,4 @@ else ()
     message("UnitTest++ was not found so unit tests will not be built and run!")
 endif()
 
-# Gather source files
-include_directories(include)
-file(GLOB SOURCES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} "src/*.cpp")
 add_executable(chip8asm ${SOURCES})
