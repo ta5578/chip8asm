@@ -14,6 +14,7 @@ cmake ..
 This will build the sources into the build directory and run unit tests as part of the build. 
 Note that you must have [UnitTest++ installed](https://github.com/unittest-cpp/unittest-cpp/wiki/Building-Using-CMake) in order for the unit tests to build and run. 
 If `UnitTest++` is not installed, unit tests will be skipped over and only the sources will be built.
+Tests can also be run ad-hoc by typing `make test` after building the project.
 
 ## Running the Assembler
 As mentioned, the assembler takes a `.asm` assembly file (see below for
@@ -21,7 +22,12 @@ an example) as input and assembles it into a `ROM` file that a chip8 VM can emul
 Additional options are supported by the assembler like dumping the assembled
 statements with memory locations to stdout as well as dumping the list of
 supported op codes. For a full list of options, run the assembler with the `-h`
-flag.
+flag. Here is an example that will run the assembler by processing `myasm.asm`
+and spitting out a ROM file `myrom.rom`.
+
+```
+./chip8asm myasm.asm -o myrom.rom
+```
 
 ## Supported Op Codes
 
