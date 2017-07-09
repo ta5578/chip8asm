@@ -49,6 +49,12 @@ Verbose: false
 -------- End Dump --------
 Binary ROM successfully generated!
 ```
+Here is the output `a.rom` file when viewed on a little-endian machine using
+`xxd`: 
+
+```
+00000000: e000 0061 0171 0a31 001a 0d1e 1a00 eefb  ...a.q.1........
+```
 
 ## Supported Op Codes
 
