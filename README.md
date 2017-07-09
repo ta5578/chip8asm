@@ -28,6 +28,27 @@ and spitting out a ROM file `myrom.rom`.
 ```
 ./chip8asm myasm.asm -o myrom.rom
 ```
+Here is an example of dumping the assembly on the `for_loop_ex.asm` file found
+under `/examples`.
+
+```
+./chip8asm ../examples/for_loop_ex.asm --dump-asm
+
+Reading from '../examples/for_loop_ex.asm' and writing to 'a.rom'.
+Dump ASM: true
+Verbose: false
+-------- Asm Dump --------
+0x200 -- 0xE0 ; CLR
+0x210 -- 0x6100 ; LOAD r1, $0,
+0x220 -- 0x7101 ; ADD r1, $1,
+0x230 -- 0x310A ; SKE r1, $A,
+0x240 -- 0x1A00 ; JMP start,
+0x250 -- 0x1E0D ; JMP end,
+0x260 -- 0x1A ; LB $1A,
+0x270 -- 0xFBEE ; LB $FBEE,
+-------- End Dump --------
+Binary ROM successfully generated!
+```
 
 ## Supported Op Codes
 

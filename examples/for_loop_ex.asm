@@ -1,4 +1,4 @@
-; This is an example that simulates a for loop
+; This is an example that simulates a for loop from 0 until 10
 
 clear    CLR ; clear the screen
 start    LOAD    r1,$0 ; Clear contents of register 1
