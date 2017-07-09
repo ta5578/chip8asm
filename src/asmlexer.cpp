@@ -1,6 +1,6 @@
 #include "asmlexer.h"
 #include <cctype>
-#include "utils.h"
+#include "opcodes.h"
 
 AsmLexer::AsmLexer(FileReader& reader) : buf(reader.read_all()), cursor(0) {}
 
