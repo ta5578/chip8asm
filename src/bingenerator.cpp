@@ -36,7 +36,8 @@ void BinGenerator::dump_asm() const
             s += a;
             s += ", ";
         }
-        s.pop_back();
+        /* Remove the last comma */
+        s = s.substr(0, s.find_last_of(","));
         std::cout << s << "\n";
     }
     std::cout << "-------- End Dump --------\n";
