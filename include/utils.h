@@ -3,6 +3,17 @@
 #include <string>
 #include <initializer_list>
 
+inline uint16_t endi(uint16_t num)
+{
+    #if (__BYTE_ORDER == __LITTLE_ENDIAN)
+        return (num & 0x00FF) << 8 | (num & 0xFF00) >> 8;
+    #elif (__BYTE_ORDER == __BIG_ENDIAN)
+        return num;
+    #else
+        #error "Couldn't determine endianess!"
+    #endif
+}
+
 /* Given ^\$[0-9]+ string and return a hexadecimal representation */
 inline uint16_t to_hex(const std::string& s)
 {

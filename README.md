@@ -38,12 +38,12 @@ Reading from '../examples/for_loop_ex.asm' and writing to 'a.rom'.
 Dump ASM: true
 Verbose: false
 -------- Asm Dump --------
-0x200 -- 0xE0 ; CLR
+0x200 -- 0xE0 ; CLR 
 0x210 -- 0x6100 ; LOAD r1, $0
 0x220 -- 0x7101 ; ADD r1, $1
 0x230 -- 0x310A ; SKE r1, $A
-0x240 -- 0x1A00 ; JMP start
-0x250 -- 0x1E0D ; JMP end
+0x240 -- 0x1210 ; JMP start
+0x250 -- 0x1250 ; JMP end
 0x260 -- 0x1A ; LB $1A
 0x270 -- 0xFBEE ; LB $FBEE
 -------- End Dump --------
@@ -53,7 +53,7 @@ Here is the output `a.rom` file when viewed on a little-endian machine using
 `xxd`: 
 
 ```
-00000000: e000 0061 0171 0a31 001a 0d1e 1a00 eefb  ...a.q.1........
+00000000: 00e0 6100 7101 310a 1210 1250 001a fbee  ..a.q.1....P....
 ```
 
 ## Supported Op Codes

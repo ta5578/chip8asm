@@ -30,7 +30,16 @@ void BinGenerator::dump_asm() const
 {
     std::cout << "-------- Asm Dump --------\n";
     for (const auto& i : instructions) {
-        std::cout << from_hex(i.addr) << " -- " << from_hex(get_opcode(i.op, i.args)) << " ; ";
+        uint16_t op = 0;
+        /* Replace labels with their addresses */
+        if (one_of<std::string>(i.op, {"JMP", "CALL", "ZJMP", "ILOAD"})) {
+            auto label = i.args[0];
+            auto arg = from_hex(label_addrs.at(label));
+            op = get_opcode(i.op, {arg});
+        } else {
+            op = get_opcode(i.op, i.args);
+        }
+        std::cout << from_hex(i.addr) << " -- " << from_hex(op) << " ; ";
         std::string s = i.op + " ";
         for (const auto& a : i.args) {
             s += a;
@@ -50,7 +59,18 @@ void BinGenerator::generate_bin()
 
     /* Now perform the binary conversion and write it to the file */
     for (const auto& i : instructions) {
-        fwriter.write(get_opcode(i.op, i.args));
+        uint16_t op = 0;
+        /* Replace labels with their addresses */
+        if (one_of<std::string>(i.op, {"JMP", "CALL", "ZJMP", "ILOAD"})) {
+            auto label = i.args[0];
+            auto arg = from_hex(label_addrs.at(label));
+            op = get_opcode(i.op, {arg});
+        } else {
+            op = get_opcode(i.op, i.args);
+        }
+        /* Correct for the host machine endianness to chip 8 big endian */
+        op = endi(op);
+        fwriter.write(op);
     }
 
     if (opts.verbose) {
