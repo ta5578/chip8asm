@@ -207,5 +207,5 @@ void BinGenerator::process_operator(const std::string& str)
 
     /* Now put it into the symbol table */
     instructions.push_back({curr_label, str, args, curr_addr});
-    curr_addr += 16;
+    curr_addr += 2;
 }

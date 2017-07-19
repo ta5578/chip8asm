@@ -3,7 +3,7 @@
 This is an assembler for the [chip8 VM](https://en.wikipedia.org/wiki/CHIP-8#Virtual_machine_description). As input, it takes an input `.asm` assembly file and converts it into a `ROM` file that a chip8 VM can run.
 
 ## Building and Testing
-The assembler source and tests are built using `cmake`. Unit testing is done via `UnitTest++`. To build the source the proper 
+The assembler source and tests are built using `cmake`. Unit testing is done via `UnitTest++`. To build the source the proper
 way (in an out-of-source build), create a directory and run cmake.
 
 ```
@@ -11,8 +11,8 @@ mkdir build
 cd build
 cmake ..
 ```
-This will build the sources into the build directory and run unit tests as part of the build. 
-Note that you must have [UnitTest++ installed](https://github.com/unittest-cpp/unittest-cpp/wiki/Building-Using-CMake) in order for the unit tests to build and run. 
+This will build the sources into the build directory and run unit tests as part of the build.
+Note that you must have [UnitTest++ installed](https://github.com/unittest-cpp/unittest-cpp/wiki/Building-Using-CMake) in order for the unit tests to build and run.
 If `UnitTest++` is not installed, unit tests will be skipped over and only the sources will be built.
 Tests can also be run ad-hoc by typing `make test` after building the project.
 
@@ -38,22 +38,22 @@ Reading from '../examples/for_loop_ex.asm' and writing to 'a.rom'.
 Dump ASM: true
 Verbose: false
 -------- Asm Dump --------
-0x200 -- 0xE0 ; CLR 
-0x210 -- 0x6100 ; LOAD r1, $0
-0x220 -- 0x7101 ; ADD r1, $1
-0x230 -- 0x310A ; SKE r1, $A
-0x240 -- 0x1210 ; JMP start
-0x250 -- 0x1250 ; JMP end
-0x260 -- 0x1A ; LB $1A
-0x270 -- 0xFBEE ; LB $FBEE
+0x200 -- 0xE0 ; CLR
+0x202 -- 0x6100 ; LOAD r1, $0
+0x204 -- 0x7101 ; ADD r1, $1
+0x206 -- 0x310A ; SKE r1, $A
+0x208 -- 0x1202 ; JMP start
+0x20A -- 0x120A ; JMP end
+0x20C -- 0x1A ; LB $1A
+0x20E -- 0xFBEE ; LB $FBEE
 -------- End Dump --------
 Binary ROM successfully generated!
 ```
 Here is the output `a.rom` file when viewed on a little-endian machine using
-`xxd`: 
+`xxd`:
 
 ```
-00000000: 00e0 6100 7101 310a 1210 1250 001a fbee  ..a.q.1....P....
+00000000: 00e0 6100 7101 310a 1202 120a 001a fbee  ..a.q.1.........
 ```
 
 ## Supported Op Codes
