@@ -28,32 +28,34 @@ and spitting out a ROM file `myrom.rom`.
 ```
 ./chip8asm myasm.asm -o myrom.rom
 ```
-Here is an example of dumping the assembly on the `for_loop_ex.asm` file found
-under `/examples`.
+Here is an example of dumping the assembly on the `ex.asm` file found under `/examples`.
 
 ```
-./chip8asm ../examples/for_loop_ex.asm --dump-asm
+./chip8asm ../examples/ex.asm -o myrom.rom --dump-asm
 
-Reading from '../examples/for_loop_ex.asm' and writing to 'a.rom'.
+Reading from '../examples/ex.asm' and writing to 'myrom.rom'.
 Dump ASM: true
 Verbose: false
 -------- Asm Dump --------
-0x200 -- 0xE0 ; CLR
-0x202 -- 0x6100 ; LOAD r1, $0
-0x204 -- 0x7101 ; ADD r1, $1
-0x206 -- 0x310A ; SKE r1, $A
-0x208 -- 0x1202 ; JMP start
-0x20A -- 0x120A ; JMP end
-0x20C -- 0x1A ; LB $1A
-0x20E -- 0xFBEE ; LB $FBEE
+0x200 -- 0xA20A ; ILOAD sprite
+0x202 -- 0x600A ; LOAD r0, $A
+0x204 -- 0x6105 ; LOAD r1, $5
+0x206 -- 0xD015 ; DRAW r0, r1, $5
+0x208 -- 0x1208 ; JMP end
+0x20A -- 0xF0 ; LB $F0
+0x20C -- 0x90 ; LB $90
+0x20E -- 0xF0 ; LB $F0
+0x210 -- 0x90 ; LB $90
+0x212 -- 0x90 ; LB $90
 -------- End Dump --------
 Binary ROM successfully generated!
 ```
-Here is the output `a.rom` file when viewed on a little-endian machine using
+Here is the output `myrom.rom` file when viewed on a little-endian machine using
 `xxd`:
 
 ```
-00000000: 00e0 6100 7101 310a 1202 120a 001a fbee  ..a.q.1.........
+00000000: a20a 600a 6105 d015 1208 00f0 0090 00f0  ..`.a...........
+00000010: 0090 0090                                ....
 ```
 
 ## Supported Op Codes
