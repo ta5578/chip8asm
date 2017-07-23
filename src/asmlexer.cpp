@@ -2,7 +2,7 @@
 #include <cctype>
 #include "opcodes.h"
 
-AsmLexer::AsmLexer(FileReader& reader) : buf(reader.read_all()), cursor(0) {}
+AsmLexer::AsmLexer(const char *buf) : buf(buf), cursor(0) {}
 
 Token AsmLexer::get_next_token()
 {

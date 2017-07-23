@@ -4,8 +4,13 @@
 #include "opcodes.h"
 
 BinGenerator::BinGenerator(const AsmLexer& lexer, const AsmOpts& opts) :
-    lexer(lexer), opts(opts), fwriter(opts.out_file, FileBit::BINARY),
+    lexer(lexer), opts(opts), fp(std::fopen(opts.out_file, "wb")),
     curr_label(), curr_addr(0x0200) {}
+
+BinGenerator::~BinGenerator()
+{
+    std::fclose(fp);
+}
 
 void BinGenerator::parse()
 {
@@ -70,7 +75,7 @@ void BinGenerator::generate_bin()
         }
         /* Correct for the host machine endianness to chip 8 big endian */
         op = endi(op);
-        fwriter.write(op);
+        std::fwrite(&op, sizeof(op), 1, fp);
     }
 
     if (opts.verbose) {

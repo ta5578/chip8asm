@@ -2,6 +2,26 @@
 
 #include <string>
 #include <initializer_list>
+#include <cstdio>
+
+inline const char* read_file(const char *path)
+{
+    std::FILE *fp = std::fopen(path, "r");
+    if (!fp) { return nullptr; }
+
+    size_t fsize = 0;
+    fseek(fp, 0, SEEK_END);
+    fsize = std::ftell(fp);
+    std::rewind(fp);
+
+    char *buf = static_cast<char*>(std::malloc(fsize));
+    if (!buf) { return nullptr; }
+
+    std::fread(buf, sizeof(*buf), fsize, fp);
+    std::fclose(fp);
+
+    return buf;
+}
 
 inline uint16_t endi(uint16_t num)
 {
@@ -75,9 +95,8 @@ inline bool is_register(const std::string& s)
     return std::tolower(s[0]) == 'r' && is_valid_hex_char(s[1]);
 }
 
-/* TODO: Maybe use var args template */
 template <class T>
-inline bool one_of(const T& t, const std::initializer_list<T>& list)
+inline bool one_of(const T& t, std::initializer_list<T> list)
 {
     for (const auto& elem : list) {
         if (t == elem) {

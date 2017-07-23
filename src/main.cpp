@@ -1,9 +1,7 @@
-#include <cassert>
 #include <cstdlib>
 #include <string>
 #include <iostream>
 #include "utils.h"
-#include "FileReader.h"
 #include "asmlexer.h"
 #include "bingenerator.h"
 #include <exception>
@@ -72,8 +70,13 @@ int main(int argc, char **argv)
         std::cout << "Dump ASM: " << (opts.dump_asm ? "true" : "false") << "\n";
         std::cout << "Verbose: " << (opts.verbose ? "true" : "false") << "\n";
 
-        FileReader reader(argv[1]);
-        AsmLexer lexer(reader);
+        const char *buf = read_file(argv[1]);
+        if (!buf) {
+            std::cerr << "Error reading from " << argv[1] << "!\n";
+            return EXIT_FAILURE;
+        }
+        AsmLexer lexer(buf);
+        std::free(const_cast<char*>(buf));
         BinGenerator gen(lexer, opts);
         gen.generate_bin();
         std::cout << "Binary ROM successfully generated!\n";

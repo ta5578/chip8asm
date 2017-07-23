@@ -2,16 +2,16 @@
 
 #include "asmlexer.h"
 #include <cstdint>
+#include <cstdio>
 #include <vector>
 #include <string>
-#include "FileWriter.h"
 #include "vm_def.h"
 #include <map>
 
 class BinGenerator {
     AsmLexer lexer;
     AsmOpts opts;
-    FileWriter fwriter;
+    std::FILE *fp;
 
     std::map<std::string, uint16_t> label_addrs;
     std::vector<Instruction> instructions;
@@ -25,6 +25,7 @@ class BinGenerator {
     void dump_asm() const;
 public:
     BinGenerator(const AsmLexer& lexer, const AsmOpts& opts);
+    ~BinGenerator();
     void parse();
     void generate_bin();
 };

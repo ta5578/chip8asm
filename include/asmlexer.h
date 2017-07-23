@@ -1,7 +1,6 @@
 #pragma once
 
 #include <string>
-#include "FileReader.h"
 #include "token.h"
 
 class AsmLexer {
@@ -12,6 +11,6 @@ private:
     void skip_white_space();
 
 public:
-    AsmLexer(FileReader& reader);
+    AsmLexer(const char *buf);
     Token get_next_token();
 };
