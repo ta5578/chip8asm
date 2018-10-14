@@ -25,7 +25,7 @@ sprite
     LB $90
     LB $90
 )";
-    emu::Lexer lex(text);
+    c8::Lexer lex(text);
 
     auto tok = lex.get_next_token();
     REQUIRE("start" == tok._str);

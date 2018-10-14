@@ -2,7 +2,7 @@
 
 #include <string>
 
-namespace emu {
+namespace c8 {
     enum class TokenType {
         OPERATOR, /* One of the recognized operators                 */
         LABEL,    /* A label                                         */

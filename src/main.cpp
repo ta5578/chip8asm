@@ -150,7 +150,7 @@ int main(int argc, char **argv)
             return EXIT_FAILURE;
         }
 
-        emu::Lexer lexer(text);
+        c8::Lexer lexer(text);
         c8::Parser parser(lexer);
         parser.parse();
 

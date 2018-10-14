@@ -2,10 +2,10 @@
 #include <cctype>
 #include "opcodes.h"
 
-emu::Lexer::Lexer(const std::string& buf) 
+c8::Lexer::Lexer(const std::string& buf) 
     : _buf(buf), _cursor(0) {}
 
-emu::Token emu::Lexer::get_next_token()
+c8::Token c8::Lexer::get_next_token()
 {
     skip_white_space();
 
@@ -31,10 +31,10 @@ emu::Token emu::Lexer::get_next_token()
             return get_next_token();
         }
     }
-    return {emu::TokenType::LABEL, tok};
+    return {c8::TokenType::LABEL, tok};
 }
 
-void emu::Lexer::skip_white_space()
+void c8::Lexer::skip_white_space()
 {
     while (_cursor < _buf.size() && isspace(_buf[_cursor])) {
         ++_cursor;

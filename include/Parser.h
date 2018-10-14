@@ -9,14 +9,14 @@ namespace c8 {
 
     class Parser {
     public:
-        Parser(emu::Lexer lexer);
+        Parser(c8::Lexer lexer);
         void parse();
 
         const std::vector<Instruction>& getInstructions() const;
         const std::map<std::string, uint16_t>& getLabels() const;
 
     private:
-        emu::Lexer _lexer;
+        c8::Lexer _lexer;
         std::map<std::string, uint16_t> _labelToAddress;
         std::vector<Instruction> _instructions;
         std::string _currLabel;
