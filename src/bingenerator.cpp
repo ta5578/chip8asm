@@ -57,11 +57,13 @@ void BinGenerator::generate_bin()
         std::fwrite(&op, sizeof(op), 1, fp);
     }
 
+#ifndef NDEBUG
     LOG("-------- Label Addresses --------");
     for (const auto& it : _labels) {
         LOG("%s -> 0x%04X", it.first.c_str(), it.second);
     }
     LOG("-------- End Addresses --------");
+#endif
 
     /* Now dump assembly to the screen if requested */
     if (opts.dump_asm) {

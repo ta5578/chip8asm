@@ -5,7 +5,7 @@ set(CMAKE_CXX_STANDARD 14)
 
 # Set additional compiler flags and link directories
 if(CMAKE_SYSTEM_NAME MATCHES "Windows")
-    #set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /W4 /WX /D_CRT_SECURE_NO_WARNINGS")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /W4 /WX /D_CRT_SECURE_NO_WARNINGS")
 else()
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Wpedantic -Werror -Wno-unused-result")
 endif()

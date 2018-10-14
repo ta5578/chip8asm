@@ -28,9 +28,9 @@ inline uint16_t to_hex(const std::string& s)
         val *= 16;
         auto cl = std::tolower(c);
         if (cl >= 'a' && cl <= 'f') {
-            val += (cl - 'a' + 10);
+            val += static_cast<uint16_t>(cl - 'a' + 10);
         } else if (std::isdigit(cl)) {
-            val += (cl - '0');
+            val += static_cast<uint16_t>(cl - '0');
         }
     }
     return val;
@@ -48,9 +48,9 @@ inline std::string from_hex(uint16_t num)
     while (num) {
         uint16_t d = num % 16;
         if (d >= 10 && d <= 15) {
-            buf[i] = ('A' + (d - 10));
+            buf[i] = static_cast<char>('A' + (d - 10));
         } else {
-            buf[i] = ('0' + d);
+            buf[i] = static_cast<char>('0' + d);
         }
         num /= 16;
         ++i;
@@ -65,8 +65,8 @@ inline std::string from_hex(uint16_t num)
 
 inline bool is_valid_hex_char(char c)
 {
-    const char lc = std::tolower(c);
-    return std::isdigit(lc) || (lc >= 'a' && lc <= 'f');
+    const auto lc = std::tolower(c);
+    return std::isdigit(lc) || (static_cast<char>(lc) >= 'a' && static_cast<char>(lc) <= 'f');
 }
 
 inline bool is_register(const std::string& s)
@@ -74,7 +74,7 @@ inline bool is_register(const std::string& s)
     if (s.size() != 2) {
         return false;
     }
-    return std::tolower(s[0]) == 'r' && is_valid_hex_char(s[1]);
+    return static_cast<char>(std::tolower(s[0])) == 'r' && is_valid_hex_char(s[1]);
 }
 
 template <class T>
