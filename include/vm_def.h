@@ -7,7 +7,7 @@
     #include <cstdio>
     #define LOG_IMPL(func, line, m, ...) \
                 do {\
-                    std::fprintf(stderr, "[%s:%d] "##m##"\n", reinterpret_cast<const char*>(func), static_cast<int>(line), m, ##__VA_ARGS__);\
+                    std::fprintf(stderr, "[%s:%d] "##m##"\n", reinterpret_cast<const char*>(func), static_cast<int>(line), ##__VA_ARGS__);\
                 } while (0)
     #define LOG(m, ...) LOG_IMPL(__FUNCTION__, __LINE__, m, ##__VA_ARGS__)
 #else

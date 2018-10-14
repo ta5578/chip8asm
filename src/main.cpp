@@ -3,6 +3,7 @@
 #include <iostream>
 #include "utils.h"
 #include "Lexer.h"
+#include "Parser.h"
 #include "bingenerator.h"
 #include <exception>
 #include "ParseException.h"
@@ -89,8 +90,12 @@ int main(int argc, char **argv)
         }
 
         emu::Lexer lexer(text);
-        BinGenerator gen(lexer, opts);
+        c8::Parser parser(lexer);
+        parser.parse();
+
+        BinGenerator gen(parser.getInstructions(), parser.getLabels(), opts);
         gen.generate_bin();
+        
         std::cout << "Binary ROM successfully generated!\n";
 
     } catch (const std::invalid_argument& e) {
