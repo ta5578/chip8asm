@@ -80,7 +80,7 @@ void BinGenerator::generate_bin()
 
     LOG("-------- Label Addresses --------");
     for (const auto& it : label_addrs) {
-        LOG("0x%04X -> %s", it.first, from_hex(it.second).c_str());
+        LOG("%s -> %0x%04X", it.first.c_str(), it.second);
     }
     LOG("-------- End Addresses --------");
 

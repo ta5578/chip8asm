@@ -7,6 +7,22 @@
 #include <exception>
 #include "ParseException.h"
 
+static std::string read_file(const char *path)
+{
+    std::FILE *fp = std::fopen(path, "r");
+    if (!fp) { return ""; }
+
+    fseek(fp, 0, SEEK_END);
+    auto fsize = std::ftell(fp);
+    std::rewind(fp);
+
+    std::string buf(fsize, '\0');
+    std::fread(&buf[0], sizeof(char), fsize, fp);
+    std::fclose(fp);
+
+    return buf;
+}
+
 static bool parse_args(int argc, char **argv, AsmOpts *opts)
 {
     if (argc < 2) {
@@ -66,13 +82,13 @@ int main(int argc, char **argv)
         std::cout << "Reading from '" << opts.in_file << "' and writing to '" << opts.out_file << "'.\n";
         std::cout << "Dump ASM: " << (opts.dump_asm ? "true" : "false") << "\n";
 
-        const char *buf = read_file(argv[1]);
-        if (!buf) {
+        const std::string text = read_file(argv[1]);
+        if (text.empty()) {
             std::cerr << "Error reading from " << argv[1] << "!\n";
             return EXIT_FAILURE;
         }
-        emu::Lexer lexer(buf);
-        std::free(const_cast<char*>(buf));
+
+        emu::Lexer lexer(text);
         BinGenerator gen(lexer, opts);
         gen.generate_bin();
         std::cout << "Binary ROM successfully generated!\n";

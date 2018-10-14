@@ -5,25 +5,6 @@
 #include <cstdio>
 #include <cctype>
 
-inline const char* read_file(const char *path)
-{
-    std::FILE *fp = std::fopen(path, "r");
-    if (!fp) { return nullptr; }
-
-    size_t fsize = 0;
-    fseek(fp, 0, SEEK_END);
-    fsize = std::ftell(fp);
-    std::rewind(fp);
-
-    char *buf = static_cast<char*>(std::malloc(fsize));
-    if (!buf) { return nullptr; }
-
-    std::fread(buf, sizeof(*buf), fsize, fp);
-    std::fclose(fp);
-
-    return buf;
-}
-
 inline uint16_t endi(uint16_t num)
 {
     #if (__BYTE_ORDER == __LITTLE_ENDIAN)
