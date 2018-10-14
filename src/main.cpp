@@ -1,6 +1,5 @@
 #include <cstdlib>
 #include <string>
-#include <iostream>
 #include "utils.h"
 #include "Lexer.h"
 #include "Parser.h"
@@ -50,7 +49,7 @@ static void write_rom(const std::string& filePath, const std::vector<Instruction
 
 static void dump_asm(const std::vector<Instruction>& instructions, const std::map<std::string, uint16_t>& labels)
 {
-    std::cout << "-------- Asm Dump --------\n";
+    std::puts("-------- ASM Dump --------");
     for (const auto& i : instructions) {
         uint16_t op = 0;
         /* Replace labels with their addresses */
@@ -61,7 +60,6 @@ static void dump_asm(const std::vector<Instruction>& instructions, const std::ma
         } else {
             op = generate_opcode(i.op, i.args);
         }
-        std::cout << from_hex(i.addr) << " -- " << from_hex(op) << " ; ";
         std::string s = i.op + " ";
         for (const auto& a : i.args) {
             s += a;
@@ -69,9 +67,9 @@ static void dump_asm(const std::vector<Instruction>& instructions, const std::ma
         }
         /* Remove the last comma */
         s = s.substr(0, s.find_last_of(","));
-        std::cout << s << "\n";
+        std::printf("0x%04X | 0x%04X ; %s\n", i.addr, op, s.c_str());
     }
-    std::cout << "-------- End Dump --------\n";
+    std::puts("-------- End Dump --------");
 }
 
 static std::string read_file(const char *path)
@@ -110,7 +108,7 @@ static bool parse_args(int argc, char **argv, AsmOpts *opts)
         } else if (arg == "--output" || arg == "-o") {
             opts->out_file = argv[i + 1];
             if (opts->out_file == nullptr) {
-                std::cerr << "Output flag specified without an output file!\n";
+                std::fprintf(stderr, "Output flag specified without an output file!\n");
                 return false;
             }
             ++i;
@@ -123,13 +121,13 @@ static bool parse_args(int argc, char **argv, AsmOpts *opts)
 
 static void show_help()
 {
-    std::cout << "chip8asm is an assembler for the chip 8 VM.\n";
-    std::cout << "The only required argument is the input .asm file.\n";
-    std::cout << "The first argument should be one of the input file or help.\n";
-    std::cout << "Here are the supported options:\n";
-    std::cout << "   --dump-asm | -dasm -- dumps the assembled statements with memory locations\n";
-    std::cout << "   --output | -o -- the name of the output ROM file. By default, it is 'a.rom'\n";
-    std::cout << "   --help | -h -- displays this help screen\n";
+    std::puts("chip8asm is an assembler for the chip 8 VM.");
+    std::puts("The only required argument is the input .asm file.");
+    std::puts("The first argument should be one of the input file or help.");
+    std::puts("Here are the supported options:");
+    std::puts("   --dump-asm | -dasm -- dumps the assembled statements with memory locations");
+    std::puts("   --output | -o -- the name of the output ROM file. By default, it is 'a.rom'");
+    std::puts("   --help | -h -- displays this help screen");
 }
 
 int main(int argc, char **argv)
@@ -146,12 +144,9 @@ int main(int argc, char **argv)
             return EXIT_SUCCESS;
         }
 
-        std::cout << "Reading from '" << opts.in_file << "' and writing to '" << opts.out_file << "'.\n";
-        std::cout << "Dump ASM: " << (opts.dump_asm ? "true" : "false") << "\n";
-
         const std::string text = read_file(argv[1]);
         if (text.empty()) {
-            std::cerr << "Error reading from " << argv[1] << "!\n";
+            std::fprintf(stderr, "Error reading from '%s'\n", text.c_str());
             return EXIT_FAILURE;
         }
 
@@ -166,15 +161,13 @@ int main(int argc, char **argv)
             dump_asm(instructions, labels);
         }
         
-        std::cout << "Binary ROM successfully generated!\n";
+        std::puts("Done.");
 
-    } catch (const std::invalid_argument& e) {
-        std::cerr << "Caught invalid argument: " << e.what() << "\n";
     } catch (const ParseException& e) {
-        std::cerr << "Caught Parse Exception: " << e.what() << "\n";
+        std::fprintf(stderr, "Caught Parse Exception: %s\n", e.what());
     } catch (const std::exception& e) {
-        std::cerr << "Caught generic exception: " << e.what() << "\n";
+        std::fprintf(stderr, "Caught generic exception: %s\n", e.what());
     } catch (...) {
-        std::cerr << "Unknown error! Please retry!\n";
+        std::fprintf(stderr, "Unknown error! Please retry!\n");
     }
 }
