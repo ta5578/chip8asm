@@ -31,8 +31,6 @@ static bool parse_args(int argc, char **argv, AsmOpts *opts)
                 return false;
             }
             ++i;
-        } else if (arg == "--verbose" || arg == "-v") {
-            opts->verbose = true;
         } else {
             return false;
         }
@@ -48,7 +46,6 @@ static void show_help()
     std::cout << "Here are the supported options:\n";
     std::cout << "   --dump-asm | -dasm -- dumps the assembled statements with memory locations\n";
     std::cout << "   --output | -o -- the name of the output ROM file. By default, it is 'a.rom'\n";
-    std::cout << "   --verbose | -v -- verbose output\n";
     std::cout << "   --help | -h -- displays this help screen\n";
 }
 
@@ -68,7 +65,6 @@ int main(int argc, char **argv)
 
         std::cout << "Reading from '" << opts.in_file << "' and writing to '" << opts.out_file << "'.\n";
         std::cout << "Dump ASM: " << (opts.dump_asm ? "true" : "false") << "\n";
-        std::cout << "Verbose: " << (opts.verbose ? "true" : "false") << "\n";
 
         const char *buf = read_file(argv[1]);
         if (!buf) {

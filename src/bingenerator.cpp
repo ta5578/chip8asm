@@ -1,6 +1,7 @@
 #include "bingenerator.h"
 #include "ParseException.h"
 #include "opcodes.h"
+#include <iostream>
 
 BinGenerator::BinGenerator(const emu::Lexer& lexer, const AsmOpts& opts) :
     lexer(lexer), opts(opts), fp(std::fopen(opts.out_file, "wb")),
@@ -17,7 +18,7 @@ void BinGenerator::parse()
     do {
         tok = lexer.get_next_token();
         std::string str = tok._str;
-        VLOG(opts, "Retrieved token: " << str);
+        LOG("Token '%s' retrieved.", str.c_str());
 
         auto type = tok._type;
         if (type == emu::TokenType::LABEL) {
@@ -77,13 +78,11 @@ void BinGenerator::generate_bin()
         std::fwrite(&op, sizeof(op), 1, fp);
     }
 
-    if (opts.verbose) {
-        //VLOG(opts, "-------- Label Addresses --------");
-        for (const auto& it : label_addrs) {
-            //VLOG(opts, it.type << " -> " << from_hex(it.str));
-        }
-        //VLOG(opts, "-------- End Addresses --------");
+    LOG("-------- Label Addresses --------");
+    for (const auto& it : label_addrs) {
+        LOG("0x%04X -> %s", it.first, from_hex(it.second).c_str());
     }
+    LOG("-------- End Addresses --------");
 
     /* Now dump assembly to the screen if requested */
     if (opts.dump_asm) {

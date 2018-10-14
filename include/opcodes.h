@@ -11,7 +11,7 @@
  * Each opcode will have a function returning a 16 bit value
  * given a vector of arguments
  */
-typedef std::function<uint16_t(const std::vector<std::string>&)> OpFxn;
+using OpFxn = std::function<uint16_t(const std::vector<std::string>&)>;
 
 /* Unsupported */
 inline uint16_t fxnSYS(const std::vector<std::string>& args)
