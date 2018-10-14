@@ -3,7 +3,7 @@
 #include <string>
 #include "token.h"
 
-class AsmLexer {
+class Lexer {
 
 private:
     std::string buf;
@@ -11,6 +11,6 @@ private:
     void skip_white_space();
 
 public:
-    AsmLexer(const char *buf);
+    Lexer(const char *buf);
     Token get_next_token();
 };

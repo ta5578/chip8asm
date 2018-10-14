@@ -3,7 +3,7 @@
 #include "token.h"
 #include "opcodes.h"
 
-BinGenerator::BinGenerator(const AsmLexer& lexer, const AsmOpts& opts) :
+BinGenerator::BinGenerator(const Lexer& lexer, const AsmOpts& opts) :
     lexer(lexer), opts(opts), fp(std::fopen(opts.out_file, "wb")),
     curr_label(), curr_addr(0x0200) {}
 

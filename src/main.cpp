@@ -2,7 +2,7 @@
 #include <string>
 #include <iostream>
 #include "utils.h"
-#include "asmlexer.h"
+#include "Lexer.h"
 #include "bingenerator.h"
 #include <exception>
 #include "ParseException.h"
@@ -75,7 +75,7 @@ int main(int argc, char **argv)
             std::cerr << "Error reading from " << argv[1] << "!\n";
             return EXIT_FAILURE;
         }
-        AsmLexer lexer(buf);
+        Lexer lexer(buf);
         std::free(const_cast<char*>(buf));
         BinGenerator gen(lexer, opts);
         gen.generate_bin();

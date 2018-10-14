@@ -70,4 +70,4 @@ target_link_libraries(testchip8asm libchip8asm)
 
 add_test(chip8asm-test ${CHIP8ASM_OUTPUT_DIR}/testchip8asm)
 
-add_executable(chip8asm ${SOURCES})
+add_executable(chip8asm ${HEADERS} ${SOURCES})

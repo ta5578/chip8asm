@@ -1,10 +1,10 @@
-#include "asmlexer.h"
+#include "Lexer.h"
 #include <cctype>
 #include "opcodes.h"
 
-AsmLexer::AsmLexer(const char *buf) : buf(buf), cursor(0) {}
+Lexer::Lexer(const char *buf) : buf(buf), cursor(0) {}
 
-Token AsmLexer::get_next_token()
+Token Lexer::get_next_token()
 {
     skip_white_space();
 
@@ -33,7 +33,7 @@ Token AsmLexer::get_next_token()
     return {TokenType::LABEL, tok};
 }
 
-void AsmLexer::skip_white_space()
+void Lexer::skip_white_space()
 {
     while (cursor < buf.size() && isspace(buf[cursor])) {
         ++cursor;

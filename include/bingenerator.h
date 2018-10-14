@@ -1,6 +1,6 @@
 #pragma once
 
-#include "asmlexer.h"
+#include "Lexer.h"
 #include <cstdint>
 #include <cstdio>
 #include <vector>
@@ -9,7 +9,7 @@
 #include <map>
 
 class BinGenerator {
-    AsmLexer lexer;
+    Lexer lexer;
     AsmOpts opts;
     std::FILE *fp;
 
@@ -24,7 +24,7 @@ class BinGenerator {
     void process_operator(const std::string& op);
     void dump_asm() const;
 public:
-    BinGenerator(const AsmLexer& lexer, const AsmOpts& opts);
+    BinGenerator(const Lexer& lexer, const AsmOpts& opts);
     ~BinGenerator();
     void parse();
     void generate_bin();
