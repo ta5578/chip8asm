@@ -1,7 +1,6 @@
 #pragma once
 
 #include <iostream>
-#include "token.h"
 
 #define VLOG(x, y) do {\
         if ((x).verbose) {\

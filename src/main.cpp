@@ -75,7 +75,7 @@ int main(int argc, char **argv)
             std::cerr << "Error reading from " << argv[1] << "!\n";
             return EXIT_FAILURE;
         }
-        Lexer lexer(buf);
+        emu::Lexer lexer(buf);
         std::free(const_cast<char*>(buf));
         BinGenerator gen(lexer, opts);
         gen.generate_bin();

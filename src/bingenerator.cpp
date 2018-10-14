@@ -1,9 +1,8 @@
 #include "bingenerator.h"
 #include "ParseException.h"
-#include "token.h"
 #include "opcodes.h"
 
-BinGenerator::BinGenerator(const Lexer& lexer, const AsmOpts& opts) :
+BinGenerator::BinGenerator(const emu::Lexer& lexer, const AsmOpts& opts) :
     lexer(lexer), opts(opts), fp(std::fopen(opts.out_file, "wb")),
     curr_label(), curr_addr(0x0200) {}
 
@@ -14,21 +13,21 @@ BinGenerator::~BinGenerator()
 
 void BinGenerator::parse()
 {
-    Token tok;
+    emu::Token tok;
     do {
         tok = lexer.get_next_token();
-        std::string str = tok.second;
+        std::string str = tok._str;
         VLOG(opts, "Retrieved token: " << str);
 
-        auto type = tok.first;
-        if (type == TokenType::LABEL) {
+        auto type = tok._type;
+        if (type == emu::TokenType::LABEL) {
             process_label(str);
-        } else if (type == TokenType::OPERATOR) {
+        } else if (type == emu::TokenType::OPERATOR) {
             process_operator(str);
         } else {
             throw ParseException(str + " is not a valid starting token! (OPERATOR|LABEL) expected!");
         }
-    } while (!tok.second.empty());
+    } while (!tok._str.empty());
 }
 
 void BinGenerator::dump_asm() const
@@ -79,11 +78,11 @@ void BinGenerator::generate_bin()
     }
 
     if (opts.verbose) {
-        VLOG(opts, "-------- Label Addresses --------");
+        //VLOG(opts, "-------- Label Addresses --------");
         for (const auto& it : label_addrs) {
-            VLOG(opts, it.first << " -> " << from_hex(it.second));
+            //VLOG(opts, it.type << " -> " << from_hex(it.str));
         }
-        VLOG(opts, "-------- End Addresses --------");
+        //VLOG(opts, "-------- End Addresses --------");
     }
 
     /* Now dump assembly to the screen if requested */
@@ -130,84 +129,84 @@ void BinGenerator::process_operator(const std::string& str)
         /* Expects label or hex */
     } else if (one_of<std::string>(str, {"JMP", "CALL", "ZJMP", "ILOAD"})) {
         auto t1 = lexer.get_next_token();
-        if (t1.first != TokenType::LABEL && t1.first != TokenType::HEX) {
+        if (t1._type != emu::TokenType::LABEL && t1._type != emu::TokenType::HEX) {
             throw ParseException(str + " expects a label or hex address as an operand!");
         }
-        args.push_back(t1.second);
+        args.push_back(t1._str);
 
         /* Expects register, comma, and hex */
     } else if (one_of<std::string>(str, {"SKE", "SKNE", "SKRE", "LOAD", "ADD", "RAND"})) {
         auto t1 = lexer.get_next_token();
-        if (t1.first != TokenType::REGISTER) {
+        if (t1._type != emu::TokenType::REGISTER) {
             throw ParseException("REGISTER expected after " + str + "!\n");
         }
         auto t2 = lexer.get_next_token();
-        if (t2.first != TokenType::COMMA) {
-            throw ParseException("COMMA expected after " + t1.second + "!\n");
+        if (t2._type != emu::TokenType::COMMA) {
+            throw ParseException("COMMA expected after " + t1._str + "!\n");
         }
         auto t3 = lexer.get_next_token();
-        if (t3.first != TokenType::HEX) {
-            throw ParseException("HEX expected after " + t2.second + "!\n");
+        if (t3._type != emu::TokenType::HEX) {
+            throw ParseException("HEX expected after " + t2._str + "!\n");
         }
-        args.push_back(t1.second);
-        args.push_back(t3.second);
+        args.push_back(t1._str);
+        args.push_back(t3._str);
 
         /* Expects 2 registers */
     } else if (one_of<std::string>(str, {"ASN", "OR", "AND", "XOR", "RADD", "SUB", "RSUB", "SKRNE"})) {
         auto t1 = lexer.get_next_token();
-        if (t1.first != TokenType::REGISTER) {
+        if (t1._type != emu::TokenType::REGISTER) {
             throw ParseException("REGISTER expected after " + str + "!\n");
         }
         auto t2 = lexer.get_next_token();
-        if (t2.first != TokenType::COMMA) {
-            throw ParseException("COMMA expected after " + t1.second + "!\n");
+        if (t2._type != emu::TokenType::COMMA) {
+            throw ParseException("COMMA expected after " + t1._str + "!\n");
         }
         auto t3 = lexer.get_next_token();
-        if (t3.first != TokenType::REGISTER) {
-            throw ParseException("REGISTER expected after " + t2.second + "!\n");
+        if (t3._type != emu::TokenType::REGISTER) {
+            throw ParseException("REGISTER expected after " + t2._str + "!\n");
         }
-        args.push_back(t1.second);
-        args.push_back(t3.second);
+        args.push_back(t1._str);
+        args.push_back(t3._str);
 
         /* Expects one register */
     } else if (one_of<std::string>(str, {"SHR", "SHL", "SKK", "SKNK", "DELA", "KEYW", "DELR", "SNDR", "IADD", "SILS", "BCD", "DUMP", "IDUMP"})) {
         auto t1 = lexer.get_next_token();
-        if (t1.first != TokenType::REGISTER) {
+        if (t1._type != emu::TokenType::REGISTER) {
             throw ParseException("REGISTER expected after " + str + "!\n");
         }
-        args.push_back(t1.second);
+        args.push_back(t1._str);
 
     } else if (str == "DRAW") { /* DRAW is the only operator to take three operands */
         auto t1 = lexer.get_next_token();
-        if (t1.first != TokenType::REGISTER) {
+        if (t1._type != emu::TokenType::REGISTER) {
             throw ParseException("REGISTER expected after " + str + "!\n");
         }
         auto t2 = lexer.get_next_token();
-        if (t2.first != TokenType::COMMA) {
-            throw ParseException("COMMA expected after " + t1.second + "!\n");
+        if (t2._type != emu::TokenType::COMMA) {
+            throw ParseException("COMMA expected after " + t1._str + "!\n");
         }
         auto t3 = lexer.get_next_token();
-        if (t3.first != TokenType::REGISTER) {
-            throw ParseException("REGISTER expected after " + t2.second + "!\n");
+        if (t3._type != emu::TokenType::REGISTER) {
+            throw ParseException("REGISTER expected after " + t2._str + "!\n");
         }
         auto t4 = lexer.get_next_token();
-        if (t4.first != TokenType::COMMA) {
-            throw ParseException("COMMA expected after " + t3.second + "!\n");
+        if (t4._type != emu::TokenType::COMMA) {
+            throw ParseException("COMMA expected after " + t3._str + "!\n");
         }
         auto t5 = lexer.get_next_token();
-        if (t5.first != TokenType::HEX) {
-            throw ParseException("HEX expected after " + t4.second + "!\n");
+        if (t5._type != emu::TokenType::HEX) {
+            throw ParseException("HEX expected after " + t4._str + "!\n");
         }
-        args.push_back(t1.second);
-        args.push_back(t3.second);
-        args.push_back(t5.second);
+        args.push_back(t1._str);
+        args.push_back(t3._str);
+        args.push_back(t5._str);
 
     } else { /* Must be special instruction LB */
         auto t1 = lexer.get_next_token();
-        if (t1.first != TokenType::HEX) {
+        if (t1._type != emu::TokenType::HEX) {
             throw ParseException("HEX expected after " + str + "!\n");
         }
-        args.push_back(t1.second);
+        args.push_back(t1._str);
     }
 
     /* Now put it into the symbol table */
