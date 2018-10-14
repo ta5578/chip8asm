@@ -3,6 +3,7 @@
 #include <string>
 #include <initializer_list>
 #include <cstdio>
+#include <cctype>
 
 inline const char* read_file(const char *path)
 {
