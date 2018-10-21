@@ -91,3 +91,25 @@ inline bool one_of(const T& t, std::initializer_list<T> list)
     }
     return false;
 }
+
+template <class... Args>
+inline std::string fmt(const char* format, Args&&... args)
+{
+    size_t count = std::snprintf(nullptr, 0, format, std::forward<Args>(args)...) + 1;
+    std::vector<char> buf(count, '\0');
+    std::snprintf(buf.data(), count, format, std::forward<Args>(args)...);
+    return buf.data();
+}
+
+template <class I>
+static std::string asCsv(I begin, I end)
+{
+    std::string s;
+    while (begin != end) {
+        s += *begin++;
+        s += ", ";
+    }
+    /* Remove the last comma */
+    s = s.substr(0, s.find_last_of(","));
+    return s;
+}

@@ -7,8 +7,9 @@ namespace c8 {
         Statement stmt;
         uint16_t op;
 
-        Instruction(Statement stmt, uint16_t op)
-            : stmt(std::move(stmt)), op(op) {}
+        Instruction(Statement stmt, uint16_t op);
+
+        std::string toString() const;
     };
 
     std::vector<Instruction> generateInstructions(const std::vector<Statement>& statements);

@@ -28,24 +28,12 @@ static void write_rom(const std::string& filePath, const std::vector<c8::Instruc
     std::fclose(fp);
 }
 
-static std::string asCsv(const std::vector<std::string>& v)
-{
-    std::string s;
-    for (const auto& e : v) {
-        s += e;
-        s += ", ";
-    }
-    /* Remove the last comma */
-    s = s.substr(0, s.find_last_of(","));
-    return s;
-}
-
 static void dump_asm(const std::vector<c8::Instruction>& instructions)
 {
     std::puts("-------- ASM Dump --------");
     for (const auto& i : instructions) {
-        std::string s = i.op + " " + asCsv(i.stmt.args);
-        std::printf("0x%04X | 0x%04X ; %s\n", i.stmt.addr, i.op, s.c_str());
+        const std::string line = i.toString();
+        std::puts(line.c_str());
     }
     std::puts("-------- End Dump --------");
 }
