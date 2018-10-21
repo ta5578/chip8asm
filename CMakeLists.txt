@@ -14,7 +14,7 @@ endif()
 
 # Set the build type (this only affects single output generators)
 if(CMAKE_GENERATOR MATCHES "Unix Makefiles")
-    if(CMAKE_BUILD_TYPE MATCHES "")
+    if(NOT CMAKE_BUILD_TYPE)
         message(WARNING "CMAKE_BUILD_TYPE was not specified. The build will default to a 'release' build type. Note that this only affects single configuration generators like Make and Ninja.")
         set(CMAKE_BUILD_TYPE "release")
         set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${CMAKE_CXX_FLAGS_RELEASE}")
