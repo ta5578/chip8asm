@@ -4,10 +4,12 @@ project(chip8asm)
 set(CMAKE_CXX_STANDARD 14)
 
 # Set additional compiler flags and link directories
-if(CMAKE_SYSTEM_NAME MATCHES "Windows")
+if(CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /W4 /WX /D_CRT_SECURE_NO_WARNINGS")
-else()
+elseif(CMAKE_CXX_COMPILER_ID MATCHES "GNU")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Wpedantic -Werror -Wno-unused-result")
+else()
+    message(FATAL_ERROR "${CMAKE_CXX_COMPILER_ID} is not supported!")
 endif()
 
 # Set the build type (this only affects single output generators)
