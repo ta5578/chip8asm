@@ -3,27 +3,32 @@
 #include <vector>
 #include <map>
 #include "Lexer.h"
-#include "vm_def.h"
 
 namespace c8 {
+
+    struct Statement {
+        std::string label, op;
+        std::vector<std::string> args;
+        uint16_t addr;
+
+        Statement(const std::string& label, const std::string& op,
+            const std::vector<std::string>& args, uint16_t addr) :
+            label(label), op(op), args(args), addr(addr)
+        {}
+    };
 
     class Parser {
     public:
         Parser(c8::Lexer lexer);
-        void parse();
-
-        const std::vector<Instruction>& getInstructions() const;
-        const std::map<std::string, uint16_t>& getLabels() const;
+        std::vector<Statement> parse();
 
     private:
         c8::Lexer _lexer;
-        std::map<std::string, uint16_t> _labelToAddress;
-        std::vector<Instruction> _instructions;
         std::string _currLabel;
         uint16_t _currAddress;
 
-        bool label_exists(const std::string& lbl) const;
-        void parse_label(const std::string& label);
-        void parse_operator(const std::string& op);
+        void parse_label(const std::string& label, std::map<std::string, uint16_t>& labels);
+        void parse_operator(const std::string& op, std::vector<Statement>& statements);
+        void replaceLabelsWithAddress(std::vector<Statement>& statements, const std::map<std::string, uint16_t>& labels);
     };
 }

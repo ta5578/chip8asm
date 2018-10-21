@@ -1,73 +1,45 @@
 #include <cstdlib>
 #include <string>
 #include "utils.h"
+#include "vm_def.h"
 #include "Lexer.h"
 #include "Parser.h"
 #include <exception>
 #include "ParseException.h"
-#include "opcodes.h"
+#include "Generator.h"
 
-static uint16_t generate_opcode(const std::string& op, const std::vector<std::string>& args)
-{
-    auto itr = OPERATORS.find(op);
-    return itr->second(args);
-}
-
-static void write_rom(const std::string& filePath, const std::vector<Instruction>& instructions, const std::map<std::string, uint16_t>& labels)
+static void write_rom(const std::string& filePath, const std::vector<c8::Instruction>& instructions)
 {
     std::FILE *fp = std::fopen(filePath.c_str(), "wb");
     if (!fp) {
         throw std::runtime_error("Unable to open file for writing.");
     }
 
-    /* Now perform the binary conversion and write it to the file */
     for (const auto& i : instructions) {
-        uint16_t op = 0;
-        /* Replace labels with their addresses */
-        if (one_of<std::string>(i.op, { "JMP", "CALL", "ZJMP", "ILOAD" })) {
-            auto label = i.args[0];
-            auto arg = from_hex(labels.at(label));
-            op = generate_opcode(i.op, { arg });
-        } else {
-            op = generate_opcode(i.op, i.args);
-        }
-        /* Correct for the host machine endianness to chip 8 big endian */
-        op = endi(op);
-
+        auto op = i.op;
         std::fwrite(&op, sizeof(op), 1, fp);
     }
     std::fclose(fp);
-
-#ifndef NDEBUG
-    LOG("-------- Label Addresses --------");
-    for (const auto& it : labels) {
-        LOG("%s -> 0x%04X", it.first.c_str(), it.second);
-    }
-    LOG("-------- End Addresses --------");
-#endif
 }
 
-static void dump_asm(const std::vector<Instruction>& instructions, const std::map<std::string, uint16_t>& labels)
+static std::string asCsv(const std::vector<std::string>& v)
+{
+    std::string s;
+    for (const auto& e : v) {
+        s += e;
+        s += ", ";
+    }
+    /* Remove the last comma */
+    s = s.substr(0, s.find_last_of(","));
+    return s;
+}
+
+static void dump_asm(const std::vector<c8::Instruction>& instructions)
 {
     std::puts("-------- ASM Dump --------");
     for (const auto& i : instructions) {
-        uint16_t op = 0;
-        /* Replace labels with their addresses */
-        if (one_of<std::string>(i.op, { "JMP", "CALL", "ZJMP", "ILOAD" })) {
-            auto label = i.args[0];
-            auto arg = from_hex(labels.at(label));
-            op = generate_opcode(i.op, { arg });
-        } else {
-            op = generate_opcode(i.op, i.args);
-        }
-        std::string s = i.op + " ";
-        for (const auto& a : i.args) {
-            s += a;
-            s += ", ";
-        }
-        /* Remove the last comma */
-        s = s.substr(0, s.find_last_of(","));
-        std::printf("0x%04X | 0x%04X ; %s\n", i.addr, op, s.c_str());
+        std::string s = i.op + " " + asCsv(i.stmt.args);
+        std::printf("0x%04X | 0x%04X ; %s\n", i.stmt.addr, i.op, s.c_str());
     }
     std::puts("-------- End Dump --------");
 }
@@ -152,13 +124,12 @@ int main(int argc, char **argv)
 
         c8::Lexer lexer(text);
         c8::Parser parser(lexer);
-        parser.parse();
 
-        auto instructions = parser.getInstructions();
-        auto labels = parser.getLabels();
-        write_rom(opts.out_file, instructions, labels);
+        auto statements = parser.parse();
+        auto instructions = c8::generateInstructions(statements);
+        write_rom(opts.out_file, instructions);
         if (opts.dump_asm) {
-            dump_asm(instructions, labels);
+            dump_asm(instructions);
         }
         
         std::puts("Done.");

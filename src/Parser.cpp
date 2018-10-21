@@ -1,55 +1,46 @@
 #include "Parser.h"
 #include "ParseException.h"
 #include "utils.h"
+#include "vm_def.h"
 
 c8::Parser::Parser(c8::Lexer lexer)
     : _lexer(lexer), _currAddress(0x0200) {}
 
-void c8::Parser::parse()
+std::vector<c8::Statement> c8::Parser::parse()
 {
     c8::Token tok;
+    std::map<std::string, uint16_t> labelToAddress;
+    std::vector<Statement> statements;
     do {
         tok = _lexer.get_next_token();
         LOG("Token '%s' retrieved.", tok._str.c_str());
 
         if (tok._type == c8::TokenType::LABEL) {
-            parse_label(tok._str);
+            parse_label(tok._str, labelToAddress);
         } else if (tok._type == c8::TokenType::OPERATOR) {
-            parse_operator(tok._str);
+            parse_operator(tok._str, statements);
         } else {
             throw ParseException(tok._str + " is not a valid starting token! (OPERATOR|LABEL) expected!");
         }
     } while (!tok._str.empty());
+
+    replaceLabelsWithAddress(statements, labelToAddress);
+    return statements;
 }
 
-const std::vector<Instruction>& c8::Parser::getInstructions() const
+void c8::Parser::parse_label(const std::string& label, std::map<std::string, uint16_t>& labels)
 {
-    return _instructions;
-}
-
-const std::map<std::string, uint16_t>& c8::Parser::getLabels() const
-{
-    return _labelToAddress;
-}
-
-bool c8::Parser::label_exists(const std::string& label) const
-{
-    return _labelToAddress.find(label) != _labelToAddress.end();
-}
-
-void c8::Parser::parse_label(const std::string& label)
-{
-    if (label_exists(label)) {
+    if (labels.count(label) > 0) {
         throw ParseException(label + " label is redefined!");
     }
 
     _currLabel = label;
     if (!_currLabel.empty()) {
-        _labelToAddress.insert({ _currLabel, _currAddress });
+        labels.insert({ _currLabel, _currAddress });
     }
 }
 
-void c8::Parser::parse_operator(const std::string& op)
+void c8::Parser::parse_operator(const std::string& op, std::vector<Statement>& statements)
 {
     /* Not implemented */
     if (op == "SYS") {
@@ -145,6 +136,20 @@ void c8::Parser::parse_operator(const std::string& op)
     }
 
     /* Now put it into the symbol table */
-    _instructions.push_back({ _currLabel, op, args, _currAddress });
+    statements.push_back({ _currLabel, op, args, _currAddress });
     _currAddress += 2;
+}
+
+void c8::Parser::replaceLabelsWithAddress(std::vector<Statement>& statements, const std::map<std::string, uint16_t>& labels)
+{
+    for (auto& stmt : statements) {
+        /* Only these instructions accept labels. */
+        if (one_of<std::string>(stmt.op, { "JMP", "CALL", "ZJMP", "ILOAD" })) {
+            auto label = stmt.args[0];
+            if (labels.count(label) == 0) {
+                throw ParseException(label + " is a label that hasn't been defined.");
+            }
+            stmt.args[0] = from_hex(labels.at(label));
+        }
+    }
 }

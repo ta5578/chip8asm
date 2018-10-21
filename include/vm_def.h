@@ -1,8 +1,5 @@
 #pragma once
 
-#include <string>
-#include <vector>
-
 #ifndef NDEBUG
     #include <cstdio>
     #define LOG_IMPL(func, line, m, ...) \
@@ -23,14 +20,4 @@ struct AsmOpts {
     AsmOpts(const char *in = "", const char *out = "a.rom", bool dump_asm = false,
         bool show_help = false) :
         in_file(in), out_file(out), dump_asm(dump_asm), show_help(show_help) {}
-};
-
-struct Instruction {
-    std::string label, op;
-    std::vector<std::string> args;
-    uint16_t addr;
-
-    Instruction(const std::string& label, const std::string& op,
-        const std::vector<std::string>& args, uint16_t addr = 0x0200) :
-            label(label), op(op), args(args), addr(addr) {}
 };

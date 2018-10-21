@@ -38,26 +38,19 @@ inline uint16_t to_hex(const std::string& s)
 
 inline std::string from_hex(uint16_t num)
 {
-    if (num == 0) {
-        return "0x0000";
-    }
-
-    char buf[sizeof(num)];
-
-    int i = 0;
-    while (num) {
-        uint16_t d = num % 16;
+    char buf[] = { '0', '0', '0', '0' };
+    for (int i = 0; num != 0; i++) {
+        const uint16_t d = num % 16;
         if (d >= 10 && d <= 15) {
             buf[i] = static_cast<char>('A' + (d - 10));
         } else {
             buf[i] = static_cast<char>('0' + d);
         }
         num /= 16;
-        ++i;
     }
 
     std::string s = "0x";
-    for (i = i - 1; i >= 0; --i) {
+    for (int i = 4 - 1; i >= 0; --i) {
         s += buf[i];
     }
     return s;

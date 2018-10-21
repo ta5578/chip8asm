@@ -2,6 +2,7 @@
 #include "test/catch.hpp"
 #include "Lexer.h"
 #include "opcodes.h"
+#include "Parser.h"
 
 TEST_CASE("LexerIntegrationTest")
 {
@@ -440,5 +441,93 @@ TEST_CASE("FromHexMin")
 TEST_CASE("FromHexMid")
 {
     auto val = from_hex(31);
-    REQUIRE("0x1F" == val);
+    REQUIRE("0x001F" == val);
+}
+
+TEST_CASE("ParserIntergrationTest")
+{
+    const std::string text = R"(
+; This is a comment in the assembly file
+; This will print the capital letter 'A' to the screen
+
+start
+    ILOAD sprite ; load the sprite location into index
+    LOAD r0,$A ; load 10 into register 0
+    LOAD r1,$5 ; load 5 into register 1
+    DRAW r0,r1,$5 ; draw a 5 byte sprite at (x,y) specified in r0, r1
+
+end
+    JMP end ; loop indefinitely
+
+; The capital letter 'A'
+sprite
+    LB $F0
+    LB $90
+    LB $F0
+    LB $90
+    LB $90
+)";
+
+    c8::Lexer lexer(text);
+    c8::Parser parser(lexer);
+
+    auto statements = parser.parse();
+    REQUIRE(10 == statements.size());
+
+    auto stmt = statements[0];
+    REQUIRE(stmt.addr == 0x0200);
+    REQUIRE(stmt.args.size() == 1);
+    REQUIRE(stmt.args[0] == "0x020A");
+    REQUIRE(stmt.op == "ILOAD");
+
+    stmt = statements[1];
+    REQUIRE(stmt.addr == 0x0202);
+    REQUIRE(stmt.args.size() == 2);
+    REQUIRE(stmt.op == "LOAD");
+
+    stmt = statements[2];
+    REQUIRE(stmt.addr == 0x0204);
+    REQUIRE(stmt.args.size() == 2);
+    REQUIRE(stmt.op == "LOAD");
+
+    stmt = statements[3];
+    REQUIRE(stmt.addr == 0x0206);
+    REQUIRE(stmt.args.size() == 3);
+    REQUIRE(stmt.op == "DRAW");
+
+    stmt = statements[4];
+    REQUIRE(stmt.addr == 0x0208);
+    REQUIRE(stmt.args.size() == 1);
+    REQUIRE(stmt.args[0] == "0x0208");
+    REQUIRE(stmt.op == "JMP");
+
+    stmt = statements[5];
+    REQUIRE(stmt.addr == 0x020A);
+    REQUIRE(stmt.args.size() == 1);
+    REQUIRE(stmt.args[0] == "$F0");
+    REQUIRE(stmt.op == "LB");
+
+    stmt = statements[6];
+    REQUIRE(stmt.addr == 0x020C);
+    REQUIRE(stmt.args.size() == 1);
+    REQUIRE(stmt.args[0] == "$90");
+    REQUIRE(stmt.op == "LB");
+
+    stmt = statements[7];
+    REQUIRE(stmt.addr == 0x020E);
+    REQUIRE(stmt.args.size() == 1);
+    REQUIRE(stmt.args[0] == "$F0");
+    REQUIRE(stmt.op == "LB");
+
+    stmt = statements[8];
+    REQUIRE(stmt.addr == 0x0210);
+    REQUIRE(stmt.args.size() == 1);
+    REQUIRE(stmt.args[0] == "$90");
+    REQUIRE(stmt.op == "LB");
+
+    stmt = statements[9];
+    REQUIRE(stmt.addr == 0x0212);
+    REQUIRE(stmt.args.size() == 1);
+    REQUIRE(stmt.args[0] == "$90");
+    REQUIRE(stmt.op == "LB");
 }
