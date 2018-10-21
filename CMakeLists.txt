@@ -55,7 +55,7 @@ message("Current output directory ${CHIP8ASM_OUTPUT_DIR}")
 # Gather source files
 include_directories(include)
 include_directories(.)
-file(GLOB SOURCES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} "src/*.cpp")
+set(SOURCES "src/Lexer.cpp" "src/Generator.cpp" "src/Parser.cpp")
 file(GLOB HEADERS RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} "include/*.h")
 
 # Create a static library from source
@@ -70,4 +70,5 @@ target_link_libraries(testchip8asm libchip8asm)
 
 add_test(chip8asm-test ${CHIP8ASM_OUTPUT_DIR}/testchip8asm)
 
-add_executable(chip8asm ${HEADERS} ${SOURCES})
+add_executable(chip8asm ${HEADERS} "src/main.cpp")
+target_link_libraries(chip8asm libchip8asm)
