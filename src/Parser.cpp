@@ -1,7 +1,6 @@
 #include "Parser.h"
 #include "ParseException.h"
 #include "utils.h"
-#include "vm_def.h"
 
 c8::Parser::Parser(c8::Lexer lexer)
     : _lexer(lexer), _currAddress(0x0200) {}

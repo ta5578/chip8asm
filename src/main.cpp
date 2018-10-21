@@ -1,12 +1,19 @@
 #include <cstdlib>
 #include <string>
 #include "utils.h"
-#include "vm_def.h"
 #include "Lexer.h"
 #include "Parser.h"
 #include <exception>
 #include "ParseException.h"
 #include "Generator.h"
+
+// the options used by the program
+struct AsmOpts {
+    const char* in_file; // the file we are reading from.
+    const char* out_file; // the file we are writing to.
+    bool dump_asm; // flag to determine if we're dumping the assembly to stdout.
+    bool show_help; // flag to determine if we're showing help message.
+};
 
 static void write_rom(const std::string& filePath, const std::vector<c8::Instruction>& instructions)
 {
@@ -117,10 +124,10 @@ int main(int argc, char **argv)
         }
 
         c8::Lexer lexer(text);
-        c8::Parser parser(lexer);
-
+        c8::Parser parser(text);
         auto statements = parser.parse();
         auto instructions = c8::generateInstructions(statements);
+
         write_rom(opts.out_file, instructions);
         if (opts.dump_asm) {
             dump_asm(instructions);

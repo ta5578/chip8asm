@@ -3,7 +3,6 @@
 #include <vector>
 #include <string>
 #include <functional>
-#include "vm_def.h"
 #include "utils.h"
 #include <map>
 
@@ -14,21 +13,18 @@
 using OpFxn = std::function<uint16_t(const std::vector<std::string>&)>;
 
 /* Unsupported */
-inline uint16_t fxnSYS(const std::vector<std::string>& args)
+inline uint16_t fxnSYS(const std::vector<std::string>&)
 {
-    V_UNUSED(args);
     return 0x0;
 }
 
-inline uint16_t fxnCLR(const std::vector<std::string>& args)
+inline uint16_t fxnCLR(const std::vector<std::string>&)
 {
-    V_UNUSED(args);
     return 0x00E0;
 }
 
-inline uint16_t fxnRET(const std::vector<std::string>& args)
+inline uint16_t fxnRET(const std::vector<std::string>&)
 {
-    V_UNUSED(args);
     return 0x00EE;
 }
 

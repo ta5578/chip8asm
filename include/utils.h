@@ -2,8 +2,17 @@
 
 #include <string>
 #include <initializer_list>
-#include <cstdio>
 #include <cctype>
+
+#ifndef NDEBUG
+#define LOG_IMPL(func, line, m, ...) \
+                do {\
+                    std::fprintf(stderr, "[%s:%d] "##m##"\n", reinterpret_cast<const char*>(func), static_cast<int>(line), ##__VA_ARGS__);\
+                } while (0)
+#define LOG(m, ...) LOG_IMPL(__FUNCTION__, __LINE__, m, ##__VA_ARGS__)
+#else
+#define LOG(m, ...)
+#endif
 
 inline uint8_t to8Bit(uint16_t num)
 {
