@@ -3,6 +3,7 @@
 #include "Lexer.h"
 #include "opcodes.h"
 #include "Parser.h"
+#include "Generator.h"
 
 TEST_CASE("LexerIntegrationTest")
 {
@@ -530,4 +531,49 @@ sprite
     REQUIRE(stmt.args.size() == 1);
     REQUIRE(stmt.args[0] == "$90");
     REQUIRE(stmt.op == "LB");
+}
+
+TEST_CASE("GeneratorIntegrationTest")
+{
+    const std::string text = R"(
+; This is a comment in the assembly file
+; This will print the capital letter 'A' to the screen
+
+start
+    ILOAD sprite ; load the sprite location into index
+    LOAD r0,$A ; load 10 into register 0
+    LOAD r1,$5 ; load 5 into register 1
+    DRAW r0,r1,$5 ; draw a 5 byte sprite at (x,y) specified in r0, r1
+
+end
+    JMP end ; loop indefinitely
+
+; The capital letter 'A'
+sprite
+    LB $F0
+    LB $90
+    LB $F0
+    LB $90
+    LB $90
+)";
+
+    c8::Lexer lexer(text);
+    c8::Parser parser(lexer);
+
+    auto statements = parser.parse();
+    auto instructions = c8::generateInstructions(statements);
+
+    REQUIRE(instructions.size() == 10);
+
+    REQUIRE(instructions[0].op == 0x0AA2);
+    REQUIRE(instructions[1].op == 0x0A60);
+    REQUIRE(instructions[2].op == 0x0561);
+    REQUIRE(instructions[3].op == 0x15D0);
+    REQUIRE(instructions[4].op == 0x0812);
+
+    REQUIRE(instructions[5].op == 0xF000);
+    REQUIRE(instructions[6].op == 0x9000);
+    REQUIRE(instructions[7].op == 0xF000);
+    REQUIRE(instructions[8].op == 0x9000);
+    REQUIRE(instructions[9].op == 0x9000);
 }
