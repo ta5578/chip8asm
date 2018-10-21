@@ -509,25 +509,25 @@ sprite
     REQUIRE(stmt.op == "LB");
 
     stmt = statements[6];
-    REQUIRE(stmt.addr == 0x020C);
+    REQUIRE(stmt.addr == 0x020B);
     REQUIRE(stmt.args.size() == 1);
     REQUIRE(stmt.args[0] == "$90");
     REQUIRE(stmt.op == "LB");
 
     stmt = statements[7];
-    REQUIRE(stmt.addr == 0x020E);
+    REQUIRE(stmt.addr == 0x020C);
     REQUIRE(stmt.args.size() == 1);
     REQUIRE(stmt.args[0] == "$F0");
     REQUIRE(stmt.op == "LB");
 
     stmt = statements[8];
-    REQUIRE(stmt.addr == 0x0210);
+    REQUIRE(stmt.addr == 0x020D);
     REQUIRE(stmt.args.size() == 1);
     REQUIRE(stmt.args[0] == "$90");
     REQUIRE(stmt.op == "LB");
 
     stmt = statements[9];
-    REQUIRE(stmt.addr == 0x0212);
+    REQUIRE(stmt.addr == 0x020E);
     REQUIRE(stmt.args.size() == 1);
     REQUIRE(stmt.args[0] == "$90");
     REQUIRE(stmt.op == "LB");

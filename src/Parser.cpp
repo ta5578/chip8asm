@@ -24,6 +24,10 @@ std::vector<c8::Statement> c8::Parser::parse()
     } while (!tok._str.empty());
 
     replaceLabelsWithAddress(statements, labelToAddress);
+
+    for (auto& p : labelToAddress) {
+        LOG("%s -> 0x%04X", p.first.c_str(), p.second);
+    }
     return statements;
 }
 
@@ -47,7 +51,7 @@ void c8::Parser::parse_operator(const std::string& op, std::vector<Statement>& s
     }
 
     std::vector<std::string> args;
-
+    uint16_t offset = 0;
     /* Expects no arguments */
     if (one_of<std::string>(op, { "CLR", "RET" })) {
 
@@ -58,7 +62,7 @@ void c8::Parser::parse_operator(const std::string& op, std::vector<Statement>& s
             throw ParseException(op + " expects a label or hex address as an operand!");
         }
         args.push_back(t1._str);
-
+        offset = 2;
         /* Expects register, comma, and hex */
     } else if (one_of<std::string>(op, { "SKE", "SKNE", "SKRE", "LOAD", "ADD", "RAND" })) {
         auto t1 = _lexer.get_next_token();
@@ -75,7 +79,7 @@ void c8::Parser::parse_operator(const std::string& op, std::vector<Statement>& s
         }
         args.push_back(t1._str);
         args.push_back(t3._str);
-
+        offset = 2;
         /* Expects 2 registers */
     } else if (one_of<std::string>(op, { "ASN", "OR", "AND", "XOR", "RADD", "SUB", "RSUB", "SKRNE" })) {
         auto t1 = _lexer.get_next_token();
@@ -92,7 +96,7 @@ void c8::Parser::parse_operator(const std::string& op, std::vector<Statement>& s
         }
         args.push_back(t1._str);
         args.push_back(t3._str);
-
+        offset = 2;
         /* Expects one register */
     } else if (one_of<std::string>(op, { "SHR", "SHL", "SKK", "SKNK", "DELA", "KEYW", "DELR", "SNDR", "IADD", "SILS", "BCD", "DUMP", "IDUMP" })) {
         auto t1 = _lexer.get_next_token();
@@ -100,7 +104,7 @@ void c8::Parser::parse_operator(const std::string& op, std::vector<Statement>& s
             throw ParseException("REGISTER expected after " + op + "!\n");
         }
         args.push_back(t1._str);
-
+        offset = 2;
     } else if (op == "DRAW") { /* DRAW is the only operator to take three operands */
         auto t1 = _lexer.get_next_token();
         if (t1._type != c8::TokenType::REGISTER) {
@@ -125,18 +129,19 @@ void c8::Parser::parse_operator(const std::string& op, std::vector<Statement>& s
         args.push_back(t1._str);
         args.push_back(t3._str);
         args.push_back(t5._str);
-
+        offset = 2;
     } else { /* Must be special instruction LB */
         auto t1 = _lexer.get_next_token();
         if (t1._type != c8::TokenType::HEX) {
             throw ParseException("HEX expected after " + op + "!\n");
         }
         args.push_back(t1._str);
+        offset = 1;
     }
 
     /* Now put it into the symbol table */
     statements.push_back({ _currLabel, op, args, _currAddress });
-    _currAddress += 2;
+    _currAddress += offset;
 }
 
 void c8::Parser::replaceLabelsWithAddress(std::vector<Statement>& statements, const std::map<std::string, uint16_t>& labels)
