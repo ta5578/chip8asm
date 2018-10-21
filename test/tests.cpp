@@ -337,3 +337,108 @@ TEST_CASE("TestLB")
     auto val = fxnLB({ "$ABC" });
     REQUIRE(0xABC == val);
 }
+
+TEST_CASE("ToHexEmptyString")
+{
+    auto val = to_hex("");
+    REQUIRE(0 == val);
+}
+
+TEST_CASE("ToHex1")
+{
+    auto val = to_hex("$EEE");
+    REQUIRE(0xEEE == val);
+}
+
+TEST_CASE("ToHexCapital")
+{
+    auto val = to_hex("F");
+    REQUIRE(0x000F == val);
+}
+
+TEST_CASE("ToHexLower")
+{
+    auto val = to_hex("a");
+    REQUIRE(0x000A == val);
+}
+
+TEST_CASE("ToHexLeadingRegisterCapital")
+{
+    auto val = to_hex("RF");
+    REQUIRE(0x000F == val);
+}
+
+TEST_CASE("ToHexLeadingRegisterLower")
+{
+    auto val = to_hex("rF");
+    REQUIRE(0x000F == val);
+}
+
+TEST_CASE("TestIsRegisterCapital")
+{
+    REQUIRE(is_register("R2"));
+}
+
+TEST_CASE("TestIsRegisterLower")
+{
+    REQUIRE(is_register("r2"));
+}
+
+TEST_CASE("TestIsRegisterTooLong")
+{
+    REQUIRE(!is_register("r23"));
+}
+
+TEST_CASE("TestIsRegisterMissingPrefix")
+{
+    REQUIRE(!is_register("23"));
+}
+
+TEST_CASE("OneOfEmpty")
+{
+    REQUIRE(!one_of<std::string>("ABC", { "" }));
+}
+
+TEST_CASE("OneOfShouldPass")
+{
+    REQUIRE(one_of<std::string>("ABC", { "LOL", "NOWAI", "ABC", "YAH" }));
+}
+
+TEST_CASE("IsValidHexCharDigits")
+{
+    for (char c = '1'; c <= '9'; ++c) {
+        REQUIRE(is_valid_hex_char(c));
+    }
+}
+
+TEST_CASE("IsValidHexCharCapitalLetters")
+{
+    for (char c = 'A'; c <= 'F'; ++c) {
+        REQUIRE(is_valid_hex_char(c));
+    }
+}
+
+TEST_CASE("IsValidHexCharLowerLetters")
+{
+    for (char c = 'a'; c <= 'a'; ++c) {
+        REQUIRE(is_valid_hex_char(c));
+    }
+}
+
+TEST_CASE("FromHexMax")
+{
+    auto val = from_hex(65535);
+    REQUIRE("0xFFFF" == val);
+}
+
+TEST_CASE("FromHexMin")
+{
+    auto val = from_hex(0);
+    REQUIRE("0x0000" == val);
+}
+
+TEST_CASE("FromHexMid")
+{
+    auto val = from_hex(31);
+    REQUIRE("0x1F" == val);
+}
