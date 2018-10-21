@@ -58,7 +58,7 @@ include_directories(.)
 file(GLOB SOURCES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} "src/*.cpp")
 file(GLOB HEADERS RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} "include/*.h")
 
-# Create a static library from source so tests (if available) can use it
+# Create a static library from source
 add_library(libchip8asm STATIC ${HEADERS} ${SOURCES})
 
 enable_testing()
