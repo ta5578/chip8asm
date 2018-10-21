@@ -3,6 +3,7 @@
 #include <string>
 #include <initializer_list>
 #include <cctype>
+#include <vector>
 
 #ifndef NDEBUG
 #define LOG_IMPL(func, line, m, ...) \
