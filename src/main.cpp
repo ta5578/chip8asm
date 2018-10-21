@@ -63,6 +63,11 @@ static std::string read_file(const char *path)
 
 static bool parse_args(int argc, char **argv, AsmOpts *opts)
 {
+    opts->show_help = false;
+    opts->dump_asm = false;
+    opts->in_file = nullptr;
+    opts->out_file = "a.c8";
+
     if (argc < 2) {
         return false;
     }
@@ -117,9 +122,9 @@ int main(int argc, char **argv)
             return EXIT_SUCCESS;
         }
 
-        const std::string text = read_file(argv[1]);
+        const std::string text = read_file(opts.in_file);
         if (text.empty()) {
-            std::fprintf(stderr, "Error reading from '%s'\n", text.c_str());
+            std::fprintf(stderr, "Error reading from '%s'\n", opts.in_file);
             return EXIT_FAILURE;
         }
 
