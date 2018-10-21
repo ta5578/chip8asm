@@ -3,18 +3,19 @@
 This is an assembler for the [chip8 VM](https://en.wikipedia.org/wiki/CHIP-8#Virtual_machine_description). As input, it takes an input `.asm` assembly file and converts it into a `ROM` file that a chip8 VM can run.
 
 ## Building and Testing
-The assembler source and tests are built using `cmake`. Unit testing is done via `UnitTest++`. To build the source the proper
-way (in an out-of-source build), create a directory and run cmake.
+The assembler source and tests are built using `cmake`:
 
 ```
 mkdir build
 cd build
 cmake ..
 ```
-This will build the sources into the build directory and run unit tests as part of the build.
-Note that you must have [UnitTest++ installed](https://github.com/unittest-cpp/unittest-cpp/wiki/Building-Using-CMake) in order for the unit tests to build and run.
-If `UnitTest++` is not installed, unit tests will be skipped over and only the sources will be built.
-Tests can also be run ad-hoc by typing `make test` after building the project.
+
+By default, CMake will generate *release* versions of the build. To enable debug builds, build with CMAKE_BUILD_TYPE set to "debug". Note that this will only affect CMake single generators like _Make_ and _Ninja_. Other generators like the _Visual Studio_ generator allow you to customize the configuration type once the generator itself is built.
+
+```
+cmake .. -DCMAKE_BUILD_TYPE=debug
+```
 
 ## Running the Assembler
 As mentioned, the assembler takes a `.asm` assembly file (see below for
@@ -22,43 +23,57 @@ an example) as input and assembles it into a `ROM` file that a chip8 VM can emul
 Additional options are supported by the assembler like dumping the assembled
 statements with memory locations to stdout as well as dumping the list of
 supported op codes. For a full list of options, run the assembler with the `-h`
-flag. Here is an example that will run the assembler by processing `myasm.asm`
-and spitting out a ROM file `myrom.rom`.
+flag.
+
+Here is an example showing how to generate a Chip8 ROM called `print-foo.c8` from the `print-foo.asm` assembly
+file under `/examples` and dump the opcodes:
 
 ```
-./chip8asm myasm.asm -o myrom.rom
+./chip8asm print_foo.asm -o print-foo.c8 --dump-asm
 ```
-Here is an example of dumping the assembly on the `ex.asm` file found under `/examples`.
 
+See below for the assembly dump. The format of the dump is `<address> | <opcode> ; <actual statement>`.
 ```
-./chip8asm ../examples/ex.asm -o myrom.rom --dump-asm
-
-Reading from '../examples/ex.asm' and writing to 'myrom.rom'.
-Dump ASM: true
-Verbose: false
--------- Asm Dump --------
-0x200 -- 0xA20A ; ILOAD sprite
-0x202 -- 0x600A ; LOAD r0, $A
-0x204 -- 0x6105 ; LOAD r1, $5
-0x206 -- 0xD015 ; DRAW r0, r1, $5
-0x208 -- 0x1208 ; JMP end
-0x20A -- 0xF0 ; LB $F0
-0x20C -- 0x90 ; LB $90
-0x20E -- 0xF0 ; LB $F0
-0x210 -- 0x90 ; LB $90
-0x212 -- 0x90 ; LB $90
+-------- ASM Dump --------
+0x0200 | 0x14A2 ; ILOAD 0x0214
+0x0202 | 0x0A60 ; LOAD R0, $A
+0x0204 | 0x0561 ; LOAD R1, $5
+0x0206 | 0x15D0 ; DRAW R0, R1, $5
+0x0208 | 0x19A2 ; ILOAD 0x0219
+0x020A | 0x0A70 ; ADD R0, $A
+0x020C | 0x15D0 ; DRAW R0, R1, $5
+0x020E | 0x0A70 ; ADD R0, $A
+0x0210 | 0x15D0 ; DRAW R0, R1, $5
+0x0212 | 0x1212 ; JMP 0x0212
+0x0214 | 0xF0 ; LB $F0
+0x0215 | 0x80 ; LB $80
+0x0216 | 0xF0 ; LB $F0
+0x0217 | 0x80 ; LB $80
+0x0218 | 0x80 ; LB $80
+0x0219 | 0xF0 ; LB $F0
+0x021A | 0x90 ; LB $90
+0x021B | 0x90 ; LB $90
+0x021C | 0x90 ; LB $90
+0x021D | 0xF0 ; LB $F0
 -------- End Dump --------
-Binary ROM successfully generated!
 ```
-Here is the output `myrom.rom` file when viewed on a little-endian machine using
-`xxd`:
+
+Here is the output `print-foo.c8` file when viewed on a little-endian machine using
+`hexdump`:
 
 ```
-00000000: a20a 600a 6105 d015 1208 00f0 0090 00f0  ..`.a...........
-00000010: 0090 0090                                ....
+00000000  a2 14 60 0a 61 05 d0 15  a2 19 70 0a d0 15 70 0a  |..`.a.....p...p.|
+00000010  d0 15 12 12 f0 80 f0 80  80 f0 90 90 90 f0        |..............|
+0000001e
 ```
+
+Finally, here's what the ROM would do when it is run on a [Chip8 emulator](https://github.com/tamerfrombk/chip8emu):
+
+![](/rsc/foo.png?raw=true "Print FOO")
 
 ## Supported Op Codes
+The Chip8 does not have official mnemonics for all the opcodes it supports; this means that I've had to make them
+up for this assembler. Luckily for you, I'm a reasonable guy and the mnemonic closely matches its functionality :)
 
 | Name | Opcode | Count | Description |
 | -----|--------|-------|----------------------------------- |
@@ -116,29 +131,48 @@ Operands may be one of three different types:
 
 ## Example
 ```
-; This is a comment in the assembly file
-; This will print the capital letter 'A' to the screen
+; draw the string 'F00' to the screen
+; (C) Tamer Aly, 2018
 
+; the beginning of the actual program
 start
-    ILOAD sprite ; load the sprite location into index
-    LOAD r0,$A ; load 10 into register 0
-    LOAD r1,$5 ; load 5 into register 1
-    DRAW r0,r1,$5 ; draw a 5 byte sprite at (x,y) specified in r0, r1
+    ; draw the 'F'
+    ILOAD f_char ; load the 'F' into index
+    LOAD R0, $A ; load 10 into register 0
+    LOAD R1, $5 ; load 5 into register 1
+    DRAW R0, R1, $5 ; draw a 5 byte character
+
+    ; draw the '0'
+    ILOAD o_char
+    ADD R0, $A ; move 10 pixels to the right
+    DRAW R0, R1, $5
+
+    ; draw another '0'
+    ADD R0, $A ; move 10 pixels to the right
+    DRAW R0, R1, $5
 
 end
     JMP end ; loop indefinitely
 
-; The capital letter 'A'
-sprite
+; the character buffer for 'F'
+f_char
+    LB $F0
+    LB $80
+    LB $F0
+    LB $80
+    LB $80
+
+; the character buffer for '0' (poor man's zero)
+o_char
     LB $F0
     LB $90
+    LB $90
+    LB $90
     LB $F0
-    LB $90
-    LB $90
 ```
 
 See the `/examples` directory for more examples.
 
-## Libraries and Tools
+## Credits
 * [CMake](https://cmake.org/)
-* [UnitTest++](https://github.com/unittest-cpp/unittest-cpp/wiki/Home)
+* [CATCH](https://github.com/catchorg/Catch2)

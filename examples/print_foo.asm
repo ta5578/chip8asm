@@ -1,36 +1,38 @@
-; draw 'F00' to the screen
+; draw the string 'F00' to the screen
+; (C) Tamer Aly, 2018
 
-f_char ; the character 'F'
+; the beginning of the actual program
+start
+    ; draw the 'F'
+    ILOAD f_char ; load the 'F' into index
+    LOAD R0, $A ; load 10 into register 0
+    LOAD R1, $5 ; load 5 into register 1
+    DRAW R0, R1, $5 ; draw a 5 byte character
 
-LB $F0
-LB $80
-LB $F0
-LB $80
-LB $80
+    ; draw the '0'
+    ILOAD o_char
+    ADD R0, $A ; move 10 pixels to the right
+    DRAW R0, R1, $5
 
-o_char ; the character '0'
+    ; draw another '0'
+    ADD R0, $A ; move 10 pixels to the right
+    DRAW R0, R1, $5
 
-LB $F0
-LB $90
-LB $90
-LB $90
-LB $F0
+end
+    JMP end ; loop indefinitely
 
-start ; the beginning of the actual program
+; the character buffer for 'F'
+f_char
+    LB $F0
+    LB $80
+    LB $F0
+    LB $80
+    LB $80
 
-; draw the 'F'
-ILOAD f_char ; load the 'F' into index
-LOAD R0, $A ; load 10 into register 0
-LOAD R1, $5 ; load 5 into register 1
-DRAW R0, R1, $5 ; draw a 5 byte character
-
-; draw the '0'
-ILOAD o_char ; load the '0' into index
-ADD R0, $10 ; add 10 into register 0
-DRAW R0, R1, $5 ; draw a 5 byte character
-
-; draw another '0'
-ADD R0, $10
-DRAW R0, R1, $5 ; draw a 5 byte character
-
-
+; the character buffer for '0' (poor man's zero)
+o_char
+    LB $F0
+    LB $90
+    LB $90
+    LB $90
+    LB $F0
