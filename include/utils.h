@@ -5,6 +5,17 @@
 #include <cstdio>
 #include <cctype>
 
+inline uint8_t to8Bit(uint16_t num)
+{
+#if (__BYTE_ORDER == __LITTLE_ENDIAN)
+    return (num & 0xFF00) >> 8;
+#elif (__BYTE_ORDER == __BIG_ENDIAN)
+    return (num & 0x00FF);
+#else
+#error "Couldn't determine endianess!"
+#endif
+}
+
 inline uint16_t endi(uint16_t num)
 {
     #if (__BYTE_ORDER == __LITTLE_ENDIAN)

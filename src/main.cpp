@@ -17,7 +17,13 @@ static void write_rom(const std::string& filePath, const std::vector<c8::Instruc
 
     for (const auto& i : instructions) {
         auto op = i.op;
-        std::fwrite(&op, sizeof(op), 1, fp);
+        /* LB is the only operation to take single byte values. */
+        if (i.stmt.op == "LB") {
+            auto value = to8Bit(op);
+            std::fwrite(&value, sizeof(value), 1, fp);
+        } else {
+            std::fwrite(&op, sizeof(op), 1, fp);
+        }
     }
     std::fclose(fp);
 }
